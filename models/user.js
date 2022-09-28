@@ -38,7 +38,13 @@ const UserSchema = new mongoose.Schema(
         accountType: {
             type: [String],
             require: true,
-        }
+        },
+        songs: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: "song"
+            }
+        ]
     },
     { timestamps : true}
 );
