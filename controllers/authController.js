@@ -32,7 +32,34 @@ const authController = {
             return res.status(500).json({msg: err.message})
         }
     },
+    login: async (req, res) => {
+        try {
+            const { username, password } = req.body
+            const user = await Users.findOne({username})
+
+            if(!user) return res.status(400).json({msg: "This username does not exist."})
+
+            const isMatch = await bcrypt.compare(password, user.password)
+            if(!isMatch) return res.status(400).json({msg: "Password is incorrect."})
+
+            const access_token = createAccessToken({id: user._id})
+
+            res.json({
+                msg: 'Login Success!',
+                access_token,
+                user: {
+                    ...user._doc,
+                    password: ''
+                }
+            })
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
+
 
 }
-
+const createAccessToken = (payload) => {
+    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1d'})
+}
 module.exports = authController
