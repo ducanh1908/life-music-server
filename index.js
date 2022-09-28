@@ -2,10 +2,10 @@ const bodyParser = require('body-parser');
 const express = require('express')
 const mongoose = require('mongoose')
 require('dotenv').config()
-
 const cors = require('cors')
 const app = express();
-
+app.use(bodyParser())
+app.use('/api', require('./routers/authRouter'));
 
 const DB = process.env.MONGODB_URL
 
