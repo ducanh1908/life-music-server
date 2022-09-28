@@ -1,6 +1,6 @@
-const Users = require('../models/user')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+const Users = require('../models/user');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const authController = {
     register: async (req, res) => {
@@ -13,7 +13,7 @@ const authController = {
             const user_email = await Users.findOne({email})
             if(user_email) return res.status(400).json({msg: "This email already exists."})
             if(phone.length < 9)
-                return res.status(400).json({msg: "Phone number must be in valid."})
+                return res.status(400).json({msg: "Invalid Phone number"})
 
             const passwordHash = await bcrypt.hash(password, 12)
 
