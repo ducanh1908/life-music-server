@@ -41,7 +41,13 @@ const UserSchema = new mongoose.Schema(
         },
         fullname:{
             type:String
-        }
+        },
+        songs: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: "song"
+            }
+        ]
     },
     { timestamps : true}
 );

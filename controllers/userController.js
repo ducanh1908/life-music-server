@@ -47,8 +47,7 @@ const userController={
                         password: ''
                     }
                 })
-
-            }else {
+            } else {
                 return res.status(400).json({msg: "Password is incorrect."})
             }
 
