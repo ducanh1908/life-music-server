@@ -37,7 +37,7 @@ const userController={
             const isMatch = await bcrypt.compare(oldpassword, user.password)
             if(isMatch){
                 const passwordHash = await bcrypt.hash(newpassword, 12)
-                await Users.findOneAndUpdate({_id: req.user._id}, {
+                await Users.findOneAndUpdate({_id:user._id}, {
                      password:passwordHash
                 })
                 res.json({
