@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema(
         },
         accountType: {
             type: [String],
-            require: true,
+            // require: true,
         },
         songs: [
             {

@@ -6,14 +6,16 @@ const authController = {
     register: async (req, res) => {
         try {
             const {username,password,phone,email} = req.body
-            let newUserName = username.toLowerCase().replace(/ /g, '')
+            console.log(req.body);
+
+            let newUserName = await username.toLowerCase().replace(/ /g,'')
 
             const user_name = await Users.findOne({username: newUserName})
             if(user_name) return res.status(400).json({msg: "This user name already exists."})
             const user_email = await Users.findOne({email})
             if(user_email) return res.status(400).json({msg: "This email already exists."})
             if(phone.length < 9)
-                return res.status(400).json({msg: "Invalid Phone number"})
+            return res.status(400).json({msg: "Invalid Phone number"})
 
             const passwordHash = await bcrypt.hash(password, 12)
 
