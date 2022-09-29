@@ -38,6 +38,9 @@ const UserSchema = new mongoose.Schema(
         accountType: {
             type: [String],
             require: true,
+        },
+        fullname:{
+            type:String
         }
     },
     { timestamps : true}
