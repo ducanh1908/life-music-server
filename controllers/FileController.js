@@ -59,6 +59,21 @@ const FileController = {
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
+    },
+    searchSong: async (req, res) => {
+        try {
+            let data = await Song.find(
+                {
+                    "$or": [
+                        {name: {$regex: req.params.key}},
+                        {author: {$regex: req.params.key}},
+                    ]
+                }
+            )
+                res.send(data);
+        }catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
     }
 };
 
