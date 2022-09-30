@@ -70,7 +70,16 @@ const FileController = {
                     ]
                 }
             )
-                res.send(data);
+                res.json(data);
+        }catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
+    getNewSong: async (req, res) => {
+        try {
+            let songs = await Song.find();
+            songs.sort((a,b) => b.createdAt - a.createdAt);
+            res.json(songs);
         }catch (err) {
             return res.status(500).json({msg: err.message})
         }
