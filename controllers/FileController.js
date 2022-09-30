@@ -60,6 +60,7 @@ const FileController = {
             return res.status(500).json({msg: err.message})
         }
     },
+
     searchSong: async (req, res) => {
         try {
             let data = await Song.find(
@@ -70,8 +71,8 @@ const FileController = {
                     ]
                 }
             )
-                res.send(data);
-        }catch (err) {
+                res.json(data);
+        } catch (err) {
             return res.status(500).json({msg: err.message})
         }
     }
