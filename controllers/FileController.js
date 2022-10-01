@@ -1,19 +1,32 @@
 const Song = require("../models/song.model");
+const View = require("../models/view.model");
 
 const FileController = {
     addNewSong: async (req, res) => {
         try {
-            let name = req.body.name;
-            let file = req.body.file;
             let newSong = new Song({
-                name: name,
-                file: file
+                name: req.body.name,
+                file: req.body.file,
+                user: req.body._id,
+                
             });
             let success = await newSong.save();
-            if(success) {
-                res.json({
-                    msg: "Bài hát đã được tải lên"
+            let songInfo = await Song.findOne().sort({createdAt: -1});
+            // console.log('songInfo', songInfo);
+            let newView = new View({
+                user: req.body._id,
+                song: songInfo._id
+            })
+            // console.log('newView', newView);
+            let createViewSuccess = await newView.save();
+            if(success && createViewSuccess) {
+                res.status(200).json({
+                    msg: "Đã tải bài hát thành công", songInfo
                 });
+            } else {
+                res.status(403).json({
+                    msg: "Upload không thành công"
+                })
             }
         } catch (err) {
             return res.status(500).json({msg: err.message})

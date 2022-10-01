@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const UserSchema = new mongoose.Schema(
     {
@@ -7,6 +8,7 @@ const UserSchema = new mongoose.Schema(
             require: [true, "please input username"],
             unique: true,
         },
+       
         password: {
             type: String,
             require: [true, "Please input password"],
@@ -26,6 +28,7 @@ const UserSchema = new mongoose.Schema(
                 /^[0-9\-\+]{9,15}$/,
                 "Please input a valid phone number",
             ],
+            require: true,
             unique: true,
         },
         profileImage: {
@@ -35,13 +38,17 @@ const UserSchema = new mongoose.Schema(
         address: {
             type: String,
         },
+        fullname:{
+            type:String
+        },
         accountType: {
             type: [String],
             default: ["local"],
             require: true,
         },
-        fullname:{
-            type:String
+        role: {
+            type: Number,
+            default: "1",
         },
     },
     { timestamps : true}

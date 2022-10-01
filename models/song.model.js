@@ -16,11 +16,11 @@ const SongSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            require: [true, "please input song's name"],        
+            required: [true, "please input song's name"],        
         },
         file: {
             type: String,
-            require: [true, 'please upload file'],
+            required: [true, 'please upload file'],
         },
         image: {
             type: String,
@@ -33,6 +33,10 @@ const SongSchema = new mongoose.Schema(
             type: Schema.Types.ObjectId,
             ref: "MiniCate",
         },
+        playlist: {
+            type: Schema.Types.ObjectId,
+            ref: "Playlist",
+        },
         singer: {
             type: Schema.Types.ObjectId,
             ref: "Singer",
@@ -44,8 +48,13 @@ const SongSchema = new mongoose.Schema(
         user: {
             type: Schema.Types.ObjectId,
             ref: "User",
+            required: true,
         },
-        views: {
+        status: {
+            type: Number,
+            default : 1,
+        },
+        guestViews: {
             type: Number,
             default : 0,
         }

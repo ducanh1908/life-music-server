@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 
-const miniCateSchema = new mongoose.Schema(
+const MiniCateSchema = new mongoose.Schema(
     {
         name: {
             type: String,
@@ -23,4 +23,4 @@ const miniCateSchema = new mongoose.Schema(
     { timestamps : true}
 )
 
-module.exports = mongoose.model("miniCate", miniCateSchema);
+module.exports = mongoose.model("MiniCate", MiniCateSchema);
