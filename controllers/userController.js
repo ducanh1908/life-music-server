@@ -14,6 +14,7 @@ const userController={
     },
     updateUser: async (req, res) => {
         try {
+
             const { profileImage, fullname, phone, address} = req.body
             if(!fullname) return res.status(400).json({msg: "Vui lòng nhập họ tên"})
             if(phone.length < 9)
@@ -22,8 +23,14 @@ const userController={
             await Users.findOneAndUpdate({_id: req.user._id}, {
                 profileImage, fullname, phone, address
             })
+            const user = await Users.findById({_id: req.user._id})
 
-            res.json({msg: "Cập nhật thành công!"})
+            res.json({
+                msg: "Cập nhật thành công!",
+                user: {
+                    ...user._doc,
+                    password: ''
+                }})
 
         } catch (err) {
             return res.status(500).json({msg: err.message})
