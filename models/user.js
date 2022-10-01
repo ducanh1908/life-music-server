@@ -37,7 +37,6 @@ const UserSchema = new mongoose.Schema(
         },
         accountType: {
             type: [String],
-            default: ["local"],
             require: true,
         },
         fullname:{
