@@ -23,7 +23,7 @@ const userController={
                 profileImage, fullname, phone, address
             })
 
-            res.json({msg: "Cập nhật thành công!"})
+            return res.status(400).json({msg: "Cập nhật thành công!"})
 
         } catch (err) {
             return res.status(500).json({msg: err.message})
@@ -40,7 +40,7 @@ const userController={
                 await Users.findOneAndUpdate({_id: req.user._id}, {
                      password:passwordHash
                 })
-                res.json({
+                  res.status(400).json({
                     msg: 'Thay đổi mật khẩu thành công!',
                     user: {
                         ...user._doc,
