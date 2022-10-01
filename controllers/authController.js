@@ -37,7 +37,7 @@ const authController = {
             const { username, password } = req.body
             const user = await Users.findOne({username})
 
-            if(!user) return res.status(400).json({msg: "Tài khoản đã tồn tại"})
+            if(!user) return res.status(400).json({msg: "Tài khoản không tồn tại"})
 
             const isMatch = await bcrypt.compare(password, user.password)
             if(!isMatch) return res.status(400).json({msg: "Mật khẩu không đúng"})
