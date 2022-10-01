@@ -12,7 +12,7 @@ const FileController = {
             let success = await newSong.save();
             if(success) {
                 res.json({
-                    msg: "File upload successful"
+                    msg: "Bài hát đã được tải lên"
                 });
             }
         } catch (err) {
@@ -42,8 +42,9 @@ const FileController = {
     updateSong: async (req, res) => {
         try {
             let { name, description, image, author} = req.body
-            let songUpdated = await Song.findOneAndUpdate({_id : req.body._id}, { name, description, image, author});
-            res.json({songUpdated})
+            await Song.findOneAndUpdate({_id : req.params.id}, { name, description, image, author});
+            let songUpdated = await Song.findById({_id:req.params.id})
+                res.json({songUpdated})
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
@@ -51,11 +52,17 @@ const FileController = {
 
     deleteSong: async (req, res) => {
         try {
-            let id = req.body._id;
-            await Song.deleteOne({id: id});
-            res.json({
-                msg: "Song deleted"
-            })
+            let id = req.params.id;
+            let song = await Song.findById({_id:id})
+            if(!song){
+                res.status(500).json({msg:"Bài hát không tồn tại"})
+            }else {
+                await Song.deleteOne({_id: id});
+                res.json({
+                    msg: "Bài hát đã được xoá"
+                })
+            }
+
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }

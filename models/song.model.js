@@ -16,9 +16,6 @@ const SongSchema = new mongoose.Schema(
             type: String,
             require: [true, "please input song's name"],        
         },
-        description: {
-            type: String,
-        },
         file: {
             type: String,
             require: [true, 'please upload file'],
@@ -30,6 +27,22 @@ const SongSchema = new mongoose.Schema(
         author: {
             type: String,
         },
+        singer: {
+            type: Schema.Types.Objects,
+            ref: "Singer"
+        },
+        category: {
+            type: Schema.Types.ObjectId,
+            ref: "Category",
+        },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
+        views: {
+            type: Number,
+            default : 0,
+        }
        
     },
     { timestamps : true}
