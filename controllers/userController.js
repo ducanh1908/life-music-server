@@ -6,7 +6,7 @@ const userController={
     getUser: async (req, res) => {
         try {
             const user = await Users.findById(req.user._id).select('-password')
-            if(!user) return res.status(400).json({msg: "User does not exist."})
+            if(!user) return res.status(400).json({msg: "Người dùng không tồn tại"})
             res.json({user})
         } catch (err) {
             return res.status(500).json({msg: err.message})
@@ -15,15 +15,15 @@ const userController={
     updateUser: async (req, res) => {
         try {
             const { profileImage, fullname, phone, address} = req.body
-            if(!fullname) return res.status(400).json({msg: "Please add your full name."})
+            if(!fullname) return res.status(400).json({msg: "Vui lòng nhập họ tên"})
             if(phone.length < 9)
-                return res.status(400).json({msg: "Invalid Phone number"})
+                return res.status(400).json({msg: "Vui lòng nhập đúng số điện thoại ; 9 chữ số"})
 
             await Users.findOneAndUpdate({_id: req.user._id}, {
                 profileImage, fullname, phone, address
             })
 
-            res.json({msg: "Update Success!"})
+            return res.status(400).json({msg: "Cập nhật thành công!"})
 
         } catch (err) {
             return res.status(500).json({msg: err.message})
@@ -32,7 +32,7 @@ const userController={
     changePassword:async (req,res)=>{
         try{
             const user = await Users.findOne({id:req.user._id})
-            if(!user) return res.status(400).json({msg: "please login"})
+            if(!user) return res.status(400).json({msg: "Vui lòng đăng nhập"})
             const {oldpassword,newpassword}= req.body
             const isMatch = await bcrypt.compare(oldpassword, user.password)
             if(isMatch){
@@ -40,16 +40,15 @@ const userController={
                 await Users.findOneAndUpdate({_id:user._id}, {
                      password:passwordHash
                 })
-                res.json({
-                    msg: 'change password Success!',
+                  res.status(400).json({
+                    msg: 'Thay đổi mật khẩu thành công!',
                     user: {
                         ...user._doc,
                         password: ''
                     }
                 })
-
-            }else {
-                return res.status(400).json({msg: "Password is incorrect."})
+            } else {
+                return res.status(400).json({msg: "Mật khẩu không đúng"})
             }
 
         }catch (err) {
