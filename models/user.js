@@ -39,12 +39,14 @@ const UserSchema = new mongoose.Schema(
             type: [String],
             // require: true,
         },
-        songs: [
-            {
-                type: mongoose.Types.ObjectId,
-                ref: "song"
-            }
-        ]
+        fullname:{
+            type:String
+        },
+        role:{
+            type:Number,
+            default: 1
+        }
+
     },
     { timestamps : true}
 );
