@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
-
+const { Schema } = require('mongoose');
 
 const AlbumSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            require: [true, "please input song's name"],        
+            require: [true, "please input album's name"],        
         },
         description: {
             type: String,
@@ -17,6 +17,21 @@ const AlbumSchema = new mongoose.Schema(
         author: {
             type: String,
         },
+        miniCate: {
+            type: Schema.Types.ObjectId,
+            ref: "MiniCate",
+            require: true,
+        },
+        singer: {
+            type: Schema.Types.ObjectId,
+            ref: "Singer",
+            require: true,
+        },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            require: true,
+        }
     },
     { timestamps : true}
 )
