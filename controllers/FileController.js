@@ -54,8 +54,8 @@ const FileController = {
 
     updateSong: async (req, res) => {
         try {
-            let { name, description, image, author} = req.body
-            await Song.findOneAndUpdate({_id : req.params.id}, { name, description, image, author});
+            let { name, description, image, author, lyric} = req.body
+            await Song.findOneAndUpdate({_id : req.params.id}, { name, description, image, author, lyric});
             let songUpdated = await Song.findById({_id:req.params.id})
                 res.json({songUpdated})
         } catch (err) {

@@ -29,6 +29,9 @@ const SongSchema = new mongoose.Schema(
         author: {
             type: String,
         },
+        lyric: {
+            type: String,
+        },
         miniCate: {
             type: Schema.Types.ObjectId,
             ref: "MiniCate",
