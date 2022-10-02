@@ -6,11 +6,16 @@ const PlaylistSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            require: [true, "please input playlist's name"],        
+            required: [true, "please input playlist's name"],        
         },
         user: {
             type: Schema.Types.ObjectId,
-            ref: "User"
+            ref: "User",
+            required: true,
+        },
+        cate: {
+            type: Schema.Types.ObjectId,
+            ref: "Category"
         }
     },
     { timestamps : true}

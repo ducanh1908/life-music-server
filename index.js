@@ -11,6 +11,11 @@ app.use('/api', require('./routers/authRouter'));
 app.use('/api', require('./routers/userRouter'));
 app.use('/api', require('./routers/songRouter'));
 app.use('/api', require('./routers/albumRouter'));
+app.use('/api', require('./routers/playlistRouter'));
+app.use('/api', require('./routers/cateRouter'));
+app.use('/api', require('./routers/singerRouter'));
+
+
 
 
 

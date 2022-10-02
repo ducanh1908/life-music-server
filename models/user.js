@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const { Schema } = require('mongoose');
 
 const UserSchema = new mongoose.Schema(
     {
         username: {
             type: String,
-            require: [true, "please input username"],
+            required: [true, "please input username"],
             unique: true,
         },
        
         password: {
             type: String,
-            require: [true, "Please input password"],
+            required: [true, "Please input password"],
         },
         email: {
             type: String,
@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema(
                 "Please input a valid email",
             ],
             unique: true,
-            require: [true, "Please input password"]
+            required: [true, "Please input email"]
         },
         phone: {
             type: String,
@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema(
                 /^[0-9\-\+]{9,15}$/,
                 "Please input a valid phone number",
             ],
-            require: true,
+            required: true,
             unique: true,
         },
         profileImage: {
@@ -41,10 +41,14 @@ const UserSchema = new mongoose.Schema(
         fullname:{
             type:String
         },
+        singer: {
+            type: Schema.Types.ObjectId,
+            ref: "Singer"
+        },
         accountType: {
             type: [String],
             default: ["local"],
-            require: true,
+            required: true,
         },
         role: {
             type: Number,

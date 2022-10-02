@@ -1,23 +1,28 @@
-const Playlist = require("../models/playlist.model");
-const Song = require("../models/song.model")
+const Singer = require("../models/singer.model");
 
-const PlaylistController = {
-    //playlist/:id, auth, playlistController.createNewPlaylist
-    createNewPlaylist: async (req, res) => {
+const SingerController = {
+    //singerRouter.post('/singer', auth, singerController.addNewSinger);
+    addNewSinger: async (req, res) => {
         try {
             let name = req.body.name;
-            let userId = req.params.id;
-            let newPlaylist = new Playlist({name : name, user: userId})
-            let success = await newPlaylist.save();
-            let getNewPlaylist = await Playlist.findOne({user : userId}).sort({createdAt: -1});
+            let description = req.body.description;
+            let image = req.body.image;
+            let userId = req.body.userId;
+            let newSinger = new Singer({
+                name: name,
+                description: description,
+                image: image,
+                user: userId,
+            });
+            let success =  await newSinger.save();
             if(success) {
                 res.json({
-                    msg: "Tạo playlist thành công", 
-                    getNewPlaylist
+                    msg: "Đăng ký ca sĩ thành công", 
+                    success
                 });
             } else {
                 res.json({
-                    msg: "Tạo playlist thất bại"
+                    msg: "Đăng ký ca sĩ thất bại"
                 })
             }
         } catch (err) {
@@ -111,4 +116,4 @@ const PlaylistController = {
    
 };
 
-module.exports = PlaylistController;
+module.exports = SingerController;

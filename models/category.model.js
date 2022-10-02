@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 const CategorySchema = new mongoose.Schema(
     {
         name: {
@@ -11,6 +10,9 @@ const CategorySchema = new mongoose.Schema(
             type: String,
             default: "https://play-lh.googleusercontent.com/olj6n0kCUo_x3lNfgvzdGR5k_NEsz2D9PuC8evI0hYCHLSQHBhKY-cQwZ4EtWnac28o=w240-h480-rw"
         },
+        description: {
+            type: String,
+        }
     },
     { timestamps : true}
 )
