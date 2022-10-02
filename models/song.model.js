@@ -9,15 +9,14 @@
 // - Album
 
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
 
 const SongSchema = new mongoose.Schema(
     {
         name: {
             type: String,
             require: [true, "please input song's name"],        
-        },
-        description: {
-            type: String,
         },
         file: {
             type: String,
@@ -30,7 +29,18 @@ const SongSchema = new mongoose.Schema(
         author: {
             type: String,
         },
-       
+        album: {
+            type: Schema.Types.ObjectId,
+            ref: "Album",
+        },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
+        views: {
+            type: Number,
+            default : 0,
+        }
     },
     { timestamps : true}
 )

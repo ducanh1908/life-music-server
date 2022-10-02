@@ -10,6 +10,9 @@ app.use(cors());
 app.use('/api', require('./routers/authRouter'));
 app.use('/api', require('./routers/userRouter'));
 app.use('/api', require('./routers/songRouter'));
+app.use('/api', require('./routers/albumRouter'));
+
+
 
 
 const DB = process.env.MONGODB_URL
