@@ -52,7 +52,7 @@ const AlbumController = {
         }
     },
 
-    // albumRouter.delete('/album', auth, albumController.deleteAlbum);
+    // albumRouter.delete('/album/:id', auth, albumController.deleteAlbum);
     deleteAlbum: async (req, res) => {
         try {
             let id = req.params.id;

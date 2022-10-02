@@ -17,15 +17,14 @@ const AlbumSchema = new mongoose.Schema(
         author: {
             type: String,
         },
-        miniCate: {
+        cate: {
             type: Schema.Types.ObjectId,
-            ref: "MiniCate",
+            ref: "Cate",
             require: true,
         },
         singer: {
             type: Schema.Types.ObjectId,
-            ref: "Singer",
-            require: true,
+            ref: "Singer"
         },
         user: {
             type: Schema.Types.ObjectId,
