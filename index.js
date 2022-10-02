@@ -4,9 +4,9 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const cors = require('cors');
 const app = express();
+app.use(cors());
 
 app.use(bodyParser());
-app.use(cors());
 app.use('/api', require('./routers/authRouter'));
 app.use('/api', require('./routers/userRouter'));
 app.use('/api', require('./routers/songRouter'));
