@@ -17,9 +17,9 @@ const AlbumSchema = new mongoose.Schema(
         author: {
             type: String,
         },
-        miniCate: {
+        cate: {
             type: Schema.Types.ObjectId,
-            ref: "MiniCate",
+            ref: "Category",
             require: true,
         },
         singer: {

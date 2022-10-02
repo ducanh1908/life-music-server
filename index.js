@@ -15,10 +15,6 @@ app.use('/api', require('./routers/playlistRouter'));
 app.use('/api', require('./routers/cateRouter'));
 app.use('/api', require('./routers/singerRouter'));
 
-
-
-
-
 const DB = process.env.MONGODB_URL
 
 mongoose.connect(DB).then(()=> {
