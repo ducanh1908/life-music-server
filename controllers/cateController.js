@@ -1,6 +1,7 @@
 const Category = require("../models/category.model");
 
 const CateController = {
+//   cateRouter.post('/cate', auth, CateController.creatNewCate);
   creatNewCate: async (req, res) => {
     try {
       let newCate = new Category({

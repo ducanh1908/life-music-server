@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = require('mongoose');
 
 const UserSchema = new mongoose.Schema(
     {
@@ -39,6 +40,10 @@ const UserSchema = new mongoose.Schema(
         },
         fullname:{
             type:String
+        },
+        singer: {
+            type: Schema.Types.ObjectId,
+            ref: "Singer"
         },
         accountType: {
             type: [String],
