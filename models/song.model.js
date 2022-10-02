@@ -32,9 +32,9 @@ const SongSchema = new mongoose.Schema(
         lyric: {
             type: String,
         },
-        miniCate: {
+        cate: {
             type: Schema.Types.ObjectId,
-            ref: "MiniCate",
+            ref: "Category",
         },
         playlist: {
             type: Schema.Types.ObjectId,

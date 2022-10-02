@@ -2,7 +2,6 @@ const Playlist = require("../models/playlist.model");
 const Song = require("../models/song.model")
 
 const PlaylistController = {
-    
     //playlist/:id, auth, playlistController.createNewPlaylist
     createNewPlaylist: async (req, res) => {
         try {
@@ -61,9 +60,10 @@ const PlaylistController = {
     updatePlaylist : async (req, res) => {
         try {
             let name = req.body.name;
+            let cateId = req.body.cateId;
             let playlistId = req.params.id;
             let songIds = req.body.songIds;
-            let updatedPlaylist = await Playlist.findByIdAndUpdate({_id: playlistId}, {name : name});
+            let updatedPlaylist = await Playlist.findByIdAndUpdate({_id: playlistId}, {name : name, cate: cateId});
             if(songIds && playlistId && updatedPlaylist) {
                 songIds.map(async (songId, index) => {
                     console.log('songId', songId, index)
