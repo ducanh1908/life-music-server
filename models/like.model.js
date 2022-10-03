@@ -4,18 +4,20 @@ const { Schema } = mongoose;
 
 const LikeSchema = new mongoose.Schema(
     {
-        like: {
-            type: Boolean,
-            default: false,        
-        },
         user: {
             type: Schema.Types.ObjectId,
             ref: "User",
+            required: true,
         },
         song: {
             type: Schema.Types.ObjectId,
             ref: "Song",
+            required: true,
         },
+        like: {
+            type: Boolean,
+            default: false
+        }
     },
     { timestamps : true}
 )

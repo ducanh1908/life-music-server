@@ -1,5 +1,6 @@
 const Song = require("../models/song.model");
 const View = require("../models/view.model");
+const mongoose = require('mongoose')
 
 const FileController = {
   // songRouter.post('/song', auth, FileController.addNewSong);
@@ -8,9 +9,11 @@ const FileController = {
       let newSong = new Song({
         name: req.body.name,
         file: req.body.file,
-        user: req.body._id,
+        user:  mongoose.Types.ObjectId(req.body._id),
       });
+      // console.log('newSong', newSong)
       let success = await newSong.save();
+      // console.log('success',success)
       let songInfo = await Song.findOne().sort({ createdAt: -1 });
       // console.log('songInfo', songInfo);
       let newView = new View({
@@ -38,6 +41,7 @@ const FileController = {
   getAllPublicSong: async (req, res) => {
     try {
       let songs = await Song.find({status : 1});
+      console.log('songs',songs)
       res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });

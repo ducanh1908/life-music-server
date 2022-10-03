@@ -50,10 +50,6 @@ const UserSchema = new mongoose.Schema(
             default: ["local"],
             required: true,
         },
-        role: {
-            type: Number,
-            default: "1",
-        },
         role:{
             type:Number,
             default: 1

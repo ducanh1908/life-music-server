@@ -7,13 +7,12 @@ const PlaylistController = {
         try {
             let name = req.body.name;
             let userId = req.params.id;
-            let newPlaylist = new Playlist({name : name, user: userId})
+            let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId)})
             let success = await newPlaylist.save();
-            let getNewPlaylist = await Playlist.findOne({user : userId}).sort({createdAt: -1});
             if(success) {
                 res.json({
                     msg: "Tạo playlist thành công", 
-                    getNewPlaylist
+                    success
                 });
             } else {
                 res.json({
@@ -35,6 +34,21 @@ const PlaylistController = {
                    console.log('songId', songId, index)
                    await Song.findByIdAndUpdate({_id : songId}, {playlist : playlistId})
                })
+           }
+           let songsInPlaylist = await Song.find({playlist : playlistId})
+           console.log('songsInPlaylist',songsInPlaylist);
+           res.status(200).json({msg : "Thêm bài hát thành công " , songsInPlaylist});
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
+
+    removeSongFromPlaylist: async (req, res) => {
+        try {
+           let songId = req.body.songId;
+           let playlistId = req.params.id;
+           if(songId && playlistId) {
+                await Song.findByIdAndUpdate({_id : songId}, {playlist : null})
            }
            let songsInPlaylist = await Song.find({playlist : playlistId})
            console.log('songsInPlaylist',songsInPlaylist);
