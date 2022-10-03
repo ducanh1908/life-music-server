@@ -31,13 +31,15 @@ const PlaylistController = {
            let songId = req.params.id;
            let playlistId = req.body.playlistId;
            let existPlaylist = await Playlist.find({_id : playlistId});
+           console.log('existPlaylist', existPlaylist)
            let existSong = await Song.find({_id : songId});
            if(songId && playlistId) {
                if(existPlaylist && existSong) {
                     await Song.findByIdAndUpdate({_id : songId}, {playlist : playlistId});
-                    let songsInPlaylist = await Song.find({playlist : playlistId})
+                    let songsInPlaylist = await Song.find({playlist : playlistId});
+                    songsInPlaylist.push({playlistName : existPlaylist[0].name}) ;
                     console.log('songsInPlaylist',songsInPlaylist);
-                    res.status(200).json({msg : "Thêm bài hát thành công " , songsInPlaylist});
+                    res.status(200).json({msg : "Thêm bài hát thành công " , songsInPlaylist, });
                } else {
                 res.status(404).json({msg : 'Playlist does not exist'});
                }
