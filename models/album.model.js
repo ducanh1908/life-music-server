@@ -19,7 +19,7 @@ const AlbumSchema = new mongoose.Schema(
         },
         cate: {
             type: Schema.Types.ObjectId,
-            ref: "Cate",
+            ref: "Category",
             require: true,
         },
         singer: {

@@ -9,9 +9,8 @@ const CateController = {
         image: req.body.image
       });
       let success = await newCate.save();
-      let Cate = await Category.findOne().sort({ createdAt: -1 });
       
-      if (success && Cate) {
+      if (success ) {
         res.status(200).json({
           msg: "Tạo Cate thành công",
           Cate,
