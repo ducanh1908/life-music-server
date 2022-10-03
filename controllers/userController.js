@@ -14,7 +14,6 @@ const userController={
     },
     updateUser: async (req, res) => {
         try {
-
             const { email,fullname, phone, address} = req.body
             const user = await Users.findById({_id: req.user._id})
             const userByPhone = await Users.findOne({phone})
