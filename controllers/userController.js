@@ -14,21 +14,26 @@ const userController={
     },
     updateUser: async (req, res) => {
         try {
-
-            const {  fullname, phone, address} = req.body
+            const { email,fullname, phone, address} = req.body
+            const user = await Users.findById({_id: req.user._id})
+            const userByPhone = await Users.findOne({phone})
+            const userByEmail = await Users.findOne({email})
             if(!fullname) return res.status(400).json({msg: "Vui lòng nhập họ tên"})
             if(phone.length < 9)
                 return res.status(400).json({msg: "Vui lòng nhập đúng số điện thoại ; 9 chữ số"})
-
+            if(userByPhone && phone !== user.phone)
+                return res.status(400).json({msg: "Số điện thoại đã tồn tại"})
+            if(userByEmail && email !== user.email)
+                return res.status(400).json({msg: "Email đã tồn tại"})
             await Users.findOneAndUpdate({_id: req.user._id}, {
-                 fullname, phone, address
+                 email,fullname, phone, address
             })
-            const user = await Users.findById({_id: req.user._id})
+            const newuser = await Users.findById({_id: req.user._id})
 
             res.json({
                 msg: "Cập nhật thành công!",
                 user: {
-                    ...user._doc,
+                    ...newuser._doc,
                     password: ''
                 }})
 
@@ -85,15 +90,7 @@ const userController={
         }catch (err) {
             return res.status(500).json({msg: err.message})
         }
-        // finally {
-        //     const user2 = await Users.findById({_id:req.user._id})
-        //     res.json({
-        //         user: {
-        //             ...user2._doc,
-        //             password: ''
-        //         }
-        //     })
-        // }
+
     }
 
 }
