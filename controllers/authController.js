@@ -13,7 +13,8 @@ const authController = {
             if(user_email) return res.status(400).json({msg: "Email đã tồn tại"})
             if(phone.length < 9)
                 return res.status(400).json({msg: "Vui lòng nhập đúng số điện thoại : 9 chữ số"})
-
+            const user_phone = await Users.findOne({phone})
+            if(user_phone) return res.status(400).json({msg: "Số điện thoại đã tồn tại"})
             const passwordHash = await bcrypt.hash(password, 12)
 
             const newUser = new Users({
