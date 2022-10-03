@@ -1,5 +1,6 @@
 const Playlist = require("../models/playlist.model");
-const Song = require("../models/song.model")
+const Song = require("../models/song.model");
+const mongoose = require('mongoose');
 
 const PlaylistController = {
     //playlist/:id, auth, playlistController.createNewPlaylist

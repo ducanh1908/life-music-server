@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const { Schema } = require('mongoose');
 
 //status 1 : public , status 2 : private
 const PlaylistSchema = new mongoose.Schema(
