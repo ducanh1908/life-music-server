@@ -69,9 +69,14 @@ const PlaylistController = {
       }
       let songsInPlaylist = await Song.find({ playlist: playlistId });
       console.log("songsInPlaylist", songsInPlaylist);
+      let song = Song.findById({ _id: songId });
+      console.log("song", song);
       res
         .status(200)
-        .json({ msg: "Thêm bài hát thành công ", songsInPlaylist });
+        .json({
+          msg: "Xóa bài hát khỏi playlist thành công ",
+          songsInPlaylist,
+        });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -80,17 +85,17 @@ const PlaylistController = {
   //playlistRouter.get('/playlists/:id', auth, playlistController.getAllUserPlaylist);
   getAllUserPlaylist: async (req, res) => {
     try {
-        let userId = req.params.id;
-        let playlists =  await Playlist.find({ user: userId })
-        let data = [];
-        for(let i = 0 ; i< playlists.length; i++) {
-            data.push(await Song.find({playlist : playlists[i]}))
-        }
-        // console.log("playlists", playlists);
-        // console.log("data", data);
-        for(let i = 0; i< playlists.length; i++) {
-            playlists[i]._doc.songs = data[i]
-        }
+      let userId = req.params.id;
+      let playlists = await Playlist.find({ user: userId });
+      let data = [];
+      for (let i = 0; i < playlists.length; i++) {
+        data.push(await Song.find({ playlist: playlists[i] }));
+      }
+      // console.log("playlists", playlists);
+      // console.log("data", data);
+      for (let i = 0; i < playlists.length; i++) {
+        playlists[i]._doc.songs = data[i];
+      }
       res.json({ playlists });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -143,17 +148,27 @@ const PlaylistController = {
     }
   },
 
-  //playlistRouter.get('/playlist', auth, playlistController.getPlaylistByName);
-  getPlaylistByName: async (req, res) => {
+  //playlistRouter.get('/playlist/search/:key', auth, playlistController.searchPlaylist);
+  searchPlaylist: async (req, res) => {
     try {
-      let Playlist = req.body.name;
-      let playlists = await Playlist.find({ name: Playlist });
+      let playlists = await Playlist.find({
+        $or: [
+          { name: { $regex: req.params.key } },
+        ],
+      });
+      let data = [];
+      for (let i = 0; i < playlists.length; i++) {
+        data.push(await Song.find({ playlist: playlists[i]._id }));
+      }
+      for (let i = 0; i < playlists.length; i++) {
+        playlists[i]._doc.songs = data[i];
+      }
       res.json({ playlists });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
   },
-
+  
   //playlistRouter.delete('/playlist/:id', auth, playlistController.deletePlaylist);
   deletePlaylist: async (req, res) => {
     try {
