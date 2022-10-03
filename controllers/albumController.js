@@ -1,6 +1,7 @@
 const Album = require("../models/album.model");
 
 const AlbumController = {
+    // albumRouter.post('/album', auth, albumController.addNewAlbum);
     addNewAlbum: async (req, res) => {
         try {
             let name = req.body.name;
@@ -18,6 +19,7 @@ const AlbumController = {
         }
     },
 
+    // albumRouter.patch('/album/update/:id', auth, albumController.updateAlbum);
     updateAlbum: async (req, res) => {
         try {
             let { name, description, image, author} = req.body
@@ -29,6 +31,7 @@ const AlbumController = {
         }
     },
 
+    // albumRouter.get('/albums', auth, albumController.getAllAlbum);
     getAllAlbum: async (req, res) => {
         try {
            let albums = await Album.find();
@@ -38,6 +41,7 @@ const AlbumController = {
         }
     },
 
+    // albumRouter.get('/album', auth, albumController.getAlbumByName);
     getAlbumByName : async (req, res) => {
         try {
             let albumName = req.body.name
@@ -48,6 +52,7 @@ const AlbumController = {
         }
     },
 
+    // albumRouter.delete('/album/:id', auth, albumController.deleteAlbum);
     deleteAlbum: async (req, res) => {
         try {
             let id = req.params.id;
