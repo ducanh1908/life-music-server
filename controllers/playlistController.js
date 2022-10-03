@@ -25,25 +25,31 @@ const PlaylistController = {
         }
     },
 
-    ///playlist/addsong/:id, auth, playlistController.addSongIntoPlaylist
+    // /playlist/addsong/:id, auth, playlistController.addSongIntoPlaylist
     addSongIntoPlaylist: async (req, res) => {
         try {
-           let songIds = req.body.songIds;
-           let playlistId = req.params.id;
-           if(songIds && playlistId) {
-               songIds.map(async (songId, index) => {
-                   console.log('songId', songId, index)
-                   await Song.findByIdAndUpdate({_id : songId}, {playlist : playlistId})
-               })
+           let songId = req.params.id;
+           let playlistId = req.body.playlistId;
+           let existPlaylist = await Playlist.find({_id : playlistId});
+           let existSong = await Song.find({_id : songId});
+           if(songId && playlistId) {
+               if(existPlaylist && existSong) {
+                    await Song.findByIdAndUpdate({_id : songId}, {playlist : playlistId});
+                    let songsInPlaylist = await Song.find({playlist : playlistId})
+                    console.log('songsInPlaylist',songsInPlaylist);
+                    res.status(200).json({msg : "Thêm bài hát thành công " , songsInPlaylist});
+               } else {
+                res.status(404).json({msg : 'Playlist does not exist'});
+               }
+           } else {
+             res.status(404).json({msg : 'PlaylistId not found'});
            }
-           let songsInPlaylist = await Song.find({playlist : playlistId})
-           console.log('songsInPlaylist',songsInPlaylist);
-           res.status(200).json({msg : "Thêm bài hát thành công " , songsInPlaylist});
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
     },
-
+    
+    // /playlist/remove/:id, auth, playlistController.removeSongFromPlaylist 
     removeSongFromPlaylist: async (req, res) => {
         try {
            let songId = req.body.songId;

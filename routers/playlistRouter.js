@@ -8,5 +8,7 @@ playlistRouter.get('/playlists/:id', auth, playlistController.getAllUserPlaylist
 playlistRouter.get('/playlist', auth, playlistController.getPlaylistByName);
 playlistRouter.patch('/playlist/update/:id', auth, playlistController.updatePlaylist);
 playlistRouter.delete('/playlist/:id', auth, playlistController.deletePlaylist);
+playlistRouter.post('/playlist/remove/:id', auth, playlistController.removeSongFromPlaylist);
+
 
 module.exports = playlistRouter;
