@@ -1,4 +1,5 @@
 const Singer = require("../models/singer.model");
+const mongoose = require('mongoose');
 
 const SingerController = {
     //singerRouter.post('/singer', auth, singerController.addNewSinger);
@@ -12,8 +13,9 @@ const SingerController = {
                 name: name,
                 description: description,
                 image: image,
-                user: userId,
+                user: mongoose.Types.ObjectId(userId)
             });
+            console.log(newSinger);
             let success =  await newSinger.save();
             if(success) {
                 res.json({

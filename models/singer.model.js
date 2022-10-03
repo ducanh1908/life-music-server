@@ -14,7 +14,7 @@ const SingerSchema = new mongoose.Schema(
             type: String,
             default: "https://www.kindpng.com/picc/m/21-214439_free-high-quality-person-icon-default-profile-picture.png"
         },
-        user: {
+        User: {
             type: Schema.Types.ObjectId,
             ref: "User",
             required: true
