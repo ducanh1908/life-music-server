@@ -41,7 +41,7 @@ const FileController = {
   getAllPublicSong: async (req, res) => {
     try {
       let songs = await Song.find({status : 1});
-      console.log('songs',songs)
+      // console.log('songs',songs)
       res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -102,6 +102,16 @@ const FileController = {
         ],
       });
       res.json(data);
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  getAllSongByPlaylistId:async (req, res) => {
+    try {
+      let id = req.params.id;
+      console.log(id)
+      let songs = await Song.find({playlist: id});
+      res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }

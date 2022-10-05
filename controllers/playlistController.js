@@ -186,19 +186,20 @@ const PlaylistController = {
       return res.status(500).json({ msg: err.message });
     }
   },
-  getPlaylistByUserId: async (req, res) => {
-    try {
-      let userId = req.user._id;
-      let playlist = await Playlist.find({ user: userId });
-      if(playlist){
-        let songs = await Song.find({ playlist: playlist._id });
-        playlist.push(songs);
-        res.status(200).json({ playlist });
-      }
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
-    }
-  },
+  // getPlaylistByUserId: async (req, res) => {
+  //   try {
+  //     let userId = req.user._id;
+  //     console.log(userId)
+  //     let playlist = await Playlist.find({ user: userId });
+  //     if(playlist){
+  //       let songs = await Song.find({ playlist: playlist._id });
+  //       playlist.push(songs);
+  //       res.status(200).json({ playlist });
+  //     }
+  //   } catch (err) {
+  //     return res.status(500).json({ msg: err.message });
+  //   }
+  // },
 };
 
 module.exports = PlaylistController;
