@@ -6,7 +6,7 @@ const userController={
     getUser: async (req, res) => {
         try {
             const user = await Users.findById(req.user._id).select('-password')
-            if(!user) return res.status(400).json({msg: "User does not exist."})
+            if(!user) return res.status(400).json({msg: "Người dùng không tồn tại"})
             res.json({user})
         } catch (err) {
             return res.status(500).json({msg: err.message})
@@ -14,16 +14,47 @@ const userController={
     },
     updateUser: async (req, res) => {
         try {
-            const { profileImage, fullname, phone, address} = req.body
-            if(!fullname) return res.status(400).json({msg: "Please add your full name."})
+            const { email,fullname, phone, address} = req.body
+            const user = await Users.findById({_id: req.user._id})
+            const userByPhone = await Users.findOne({phone})
+            const userByEmail = await Users.findOne({email})
+            if(!fullname) return res.status(400).json({msg: "Vui lòng nhập họ tên"})
             if(phone.length < 9)
-                return res.status(400).json({msg: "Invalid Phone number"})
-
+                return res.status(400).json({msg: "Vui lòng nhập đúng số điện thoại ; 9 chữ số"})
+            if(userByPhone && phone !== user.phone)
+                return res.status(400).json({msg: "Số điện thoại đã tồn tại"})
+            if(userByEmail && email !== user.email)
+                return res.status(400).json({msg: "Email đã tồn tại"})
             await Users.findOneAndUpdate({_id: req.user._id}, {
-                profileImage, fullname, phone, address
+                 email,fullname, phone, address
             })
+            const newuser = await Users.findById({_id: req.user._id})
 
-            res.json({msg: "Update Success!"})
+            res.json({
+                msg: "Cập nhật thành công!",
+                user: {
+                    ...newuser._doc,
+                    password: ''
+                }})
+
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
+    updateAvatar: async (req, res) => {
+        try {
+            const {profileImage} = req.body
+          
+            await Users.findOneAndUpdate({_id: req.user._id}, {
+                profileImage
+            })
+            const user = await Users.findById({_id: req.user._id})
+            res.json({
+                msg: "Cập nhật thành công!",
+                user: {
+                    ...user._doc,
+                    password: ''
+                }})
 
         } catch (err) {
             return res.status(500).json({msg: err.message})
@@ -31,29 +62,35 @@ const userController={
     },
     changePassword:async (req,res)=>{
         try{
-            const user = await Users.findOne({id:req.user._id})
-            if(!user) return res.status(400).json({msg: "please login"})
+            const user = await Users.findById({_id:req.user._id})
+            if(!user) return res.status(400).json({msg: "Vui lòng đăng nhập"})
             const {oldpassword,newpassword}= req.body
             const isMatch = await bcrypt.compare(oldpassword, user.password)
-            if(isMatch){
+            if(!isMatch) return res.status(400).json({
+                msg: "Mật khẩu cũ không đúng",
+                user: {
+                    ...user._doc,
+                    password: ''
+                }
+            })
+
                 const passwordHash = await bcrypt.hash(newpassword, 12)
-                await Users.findOneAndUpdate({_id: req.user._id}, {
-                     password:passwordHash
+                await Users.findOneAndUpdate({_id:req.user._id}, {
+                    password:passwordHash
                 })
+                const newuser = await Users.findById({_id:req.user._id})
                 res.json({
-                    msg: 'change password Success!',
+                    msg: 'Thay đổi mật khẩu thành công!',
                     user: {
-                        ...user._doc,
+                        ...newuser._doc,
                         password: ''
                     }
                 })
-            } else {
-                return res.status(400).json({msg: "Password is incorrect."})
-            }
 
         }catch (err) {
             return res.status(500).json({msg: err.message})
         }
+
     }
 
 }
