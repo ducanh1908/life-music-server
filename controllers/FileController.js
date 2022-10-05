@@ -53,7 +53,7 @@ const FileController = {
   getAllPublicSong: async (req, res) => {
     try {
       let songs = await Song.find({status : 1});
-      // console.log('getAllPublicSong',songs)
+     
       res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -119,6 +119,19 @@ const FileController = {
       return res.status(500).json({ msg: err.message });
     }
   },
-};
-
+  getSongById: async (req, res) => {
+    
+    try {
+      let id = req.params.id;
+      let song = await Song.findById({_id: id});
+      if (!song) {
+        res.status(500).json({ msg: "Bài hát không tồn tại" });
+      } else {
+        res.status(200).json(song);
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
 module.exports = FileController;
