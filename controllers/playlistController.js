@@ -28,6 +28,32 @@ const PlaylistController = {
     }
   },
 
+  //playlist/:id, auth, playlistController.createNewPlaylist
+  createNewPublicPlaylist: async (req, res) => {
+    try {
+      let name = req.body.name;
+      let userId = req.params.id;
+      let newPlaylist = new Playlist({
+        name: name,
+        user: mongoose.Types.ObjectId(userId),
+        status: 2
+      });
+      let success = await newPlaylist.save();
+      if (success) {
+        res.json({
+          msg: "Tạo public playlist thành công",
+          success,
+        });
+      } else {
+        res.json({
+          msg: "Tạo public playlist thất bại",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+
   // /playlist/addsong/:id, auth, playlistController.addSongIntoPlaylist
   addSongIntoPlaylist: async (req, res) => {
     try {
@@ -87,6 +113,24 @@ const PlaylistController = {
     try {
       let userId = req.params.id;
       let playlists = await Playlist.find({ user: userId });
+      let data = [];
+      for (let i = 0; i < playlists.length; i++) {
+        data.push(await Song.find({ playlist: playlists[i] }));
+      }
+      // console.log("playlists", playlists);
+      // console.log("data", data);
+      for (let i = 0; i < playlists.length; i++) {
+        playlists[i]._doc.songs = data[i];
+      }
+      res.json({ playlists });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+
+  getAllPublicPlaylist: async (req, res) => {
+    try {
+      let playlists = await Playlist.find({status: 2});
       let data = [];
       for (let i = 0; i < playlists.length; i++) {
         data.push(await Song.find({ playlist: playlists[i] }));
