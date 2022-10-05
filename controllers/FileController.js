@@ -9,6 +9,7 @@ const FileController = {
       let newSong = new Song({
         name: req.body.name,
         file: req.body.file,
+        duration: req.body.duration,
         user:  mongoose.Types.ObjectId(req.user._id),
       });
       let success = await newSong.save();
@@ -40,7 +41,7 @@ const FileController = {
   getUploadedSongs: async (req, res) => {
     try {
       let userId = req.user._id;
-      let songs = await Song.find({user : mongoose.Types.ObjectId(userId)}).sort({"createAt":-1});
+      let songs = await Song.find({user : mongoose.Types.ObjectId(userId)}).sort({"createAt": 1});
       res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -89,11 +90,12 @@ const FileController = {
   deleteSong: async (req, res) => {
     try {
       let id = req.params.id;
-      let song = await Song.findById({ _id: id });
+      let user = req.user._id;
+      let song = await Song.find({user : mongoose.Types.ObjectId(user)}, { _id: mongoose.Types.ObjectId(id) });
       if (!song) {
         res.status(500).json({ msg: "Bài hát không tồn tại" });
       } else {
-        await Song.deleteOne({ _id: id });
+        await Song.deleteOne({ _id: mongoose.Types.ObjectId(id) });
         res.json({
           msg: "Bài hát đã được xoá",
         });

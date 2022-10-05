@@ -48,7 +48,6 @@ const UserSchema = new mongoose.Schema(
         accountType: {
             type: [String],
             default: ["local"],
-            required: true,
         },
         role:{
             type:Number,
