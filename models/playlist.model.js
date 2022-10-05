@@ -24,6 +24,10 @@ const PlaylistSchema = new mongoose.Schema(
         status: {
             type: Number,
             default: 1
+        },
+        description: {
+            type: String,
+            default: 'Quyen dep trai'
         }
 
     },
