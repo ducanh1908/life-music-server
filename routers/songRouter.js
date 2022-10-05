@@ -8,5 +8,5 @@ songRouter.get('/song', auth, FileController.getSongByName);
 songRouter.patch('/song/:id', auth, FileController.updateSong);
 songRouter.delete('/song/:id', auth, FileController.deleteSong);
 songRouter.get('/song/search/:key', auth, FileController.searchSong);
-
+songRouter.get('/song/:id', auth, FileController.getSongById);
 module.exports = songRouter

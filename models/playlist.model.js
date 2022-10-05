@@ -17,10 +17,15 @@ const PlaylistSchema = new mongoose.Schema(
             type: Schema.Types.ObjectId,
             ref: "Category"
         },
+        image: {
+            type: String,
+            default:"https://reviewedu.net/wp-content/uploads/2021/11/94469.png"
+        },
         status: {
             type: Number,
             default: 1
         }
+
     },
     { timestamps : true}
 )

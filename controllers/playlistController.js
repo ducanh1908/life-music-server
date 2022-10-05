@@ -10,6 +10,7 @@ const PlaylistController = {
             let userId = req.params.id;
             let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId)})
             let success = await newPlaylist.save();
+
             if(success) {
                 res.json({
                     msg: "Tạo playlist thành công", 
@@ -31,14 +32,14 @@ const PlaylistController = {
            let songId = req.params.id;
            let playlistId = req.body.playlistId;
            let existPlaylist = await Playlist.find({_id : playlistId});
-           console.log('existPlaylist', existPlaylist)
+      
            let existSong = await Song.find({_id : songId});
            if(songId && playlistId) {
                if(existPlaylist && existSong) {
                     await Song.findByIdAndUpdate({_id : songId}, {playlist : playlistId});
                     let songsInPlaylist = await Song.find({playlist : playlistId});
                     songsInPlaylist.push({playlistName : existPlaylist[0].name}) ;
-                    console.log('songsInPlaylist',songsInPlaylist);
+                  
                     res.status(200).json({msg : "Thêm bài hát thành công " , songsInPlaylist, });
                } else {
                 res.status(404).json({msg : 'Playlist does not exist'});
@@ -60,7 +61,7 @@ const PlaylistController = {
                 await Song.findByIdAndUpdate({_id : songId}, {playlist : null})
            }
            let songsInPlaylist = await Song.find({playlist : playlistId})
-           console.log('songsInPlaylist',songsInPlaylist);
+           
            res.status(200).json({msg : "Thêm bài hát thành công " , songsInPlaylist});
         } catch (err) {
             return res.status(500).json({msg: err.message})
@@ -71,8 +72,7 @@ const PlaylistController = {
     getAllUserPlaylist: async (req, res) => {
         try {
            let userId = req.params.id;
-           let playlists = await Playlist.find({user :userId});
-           console.log('playlists', playlists)
+           let playlists = await Playlist.find({user :userId});    
                 res.json({playlists});
         } catch (err) {
             return res.status(500).json({msg: err.message});
@@ -89,13 +89,13 @@ const PlaylistController = {
             let updatedPlaylist = await Playlist.findByIdAndUpdate({_id: playlistId}, {name : name, cate: cateId});
             if(songIds && playlistId && updatedPlaylist) {
                 songIds.map(async (songId, index) => {
-                    console.log('songId', songId, index)
+                  
                     await Song.findByIdAndUpdate({_id : songId}, {playlist : playlistId})
                 })
             }
             let playlist = await Playlist.find({_id : playlistId})
             let songsInPlaylist = await Song.find({playlist : playlistId})
-            console.log('songsInPlaylist',songsInPlaylist);
+          
             res.status(200).json({msg : "Playlist updated successfully", playlist, songsInPlaylist});
         } catch (err) {
             return res.status(500).json({msg: err.message});
@@ -112,6 +112,19 @@ const PlaylistController = {
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
+    },
+           
+    
+    getPlaylistById : async(req, res)=> {
+        let id = req.params.id;
+        let playlist = await Playlist.findById({_id:id}); 
+        if(playlist) {
+          return   res.status(200).json(playlist);
+        }
+        else {
+            return res.status(400).json({msg: "Playlist không tồn tại"});
+        }
+
     },
 
     //playlistRouter.delete('/playlist/:id', auth, playlistController.deletePlaylist);

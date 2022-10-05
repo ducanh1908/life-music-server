@@ -44,7 +44,7 @@ const userController={
     updateAvatar: async (req, res) => {
         try {
             const {profileImage} = req.body
-            console.log(profileImage)
+          
             await Users.findOneAndUpdate({_id: req.user._id}, {
                 profileImage
             })
