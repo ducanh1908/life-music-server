@@ -3,30 +3,28 @@ const Song = require("../models/song.model");
 const mongoose = require("mongoose");
 
 const PlaylistController = {
-  //playlist/:id, auth, playlistController.createNewPlaylist
-  createNewPlaylist: async (req, res) => {
-    try {
-      let name = req.body.name;
-      let userId = req.params.id;
-      let newPlaylist = new Playlist({
-        name: name,
-        user: mongoose.Types.ObjectId(userId),
-      });
-      let success = await newPlaylist.save();
-      if (success) {
-        res.json({
-          msg: "Tạo playlist thành công",
-          success,
-        });
-      } else {
-        res.json({
-          msg: "Tạo playlist thất bại",
-        });
-      }
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
-    }
-  },
+    //playlist/:id, auth, playlistController.createNewPlaylist
+    createNewPlaylist: async (req, res) => {
+        try {
+            let name = req.body.name;
+            let userId = req.params.id;
+            let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId)})
+            let success = await newPlaylist.save();
+
+            if(success) {
+                res.json({
+                    msg: "Tạo playlist thành công", 
+                    success
+                });
+            } else {
+                res.json({
+                    msg: "Tạo playlist thất bại"
+                })
+            }
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
 
   // /playlist/addsong/:id, auth, playlistController.addSongIntoPlaylist
   addSongIntoPlaylist: async (req, res) => {
@@ -153,6 +151,19 @@ const PlaylistController = {
       return res.status(500).json({ msg: err.message });
     }
   },
+           
+    
+    getPlaylistById : async(req, res)=> {
+        let id = req.params.id;
+        let playlist = await Playlist.findById({_id:id}); 
+        if(playlist) {
+          return   res.status(200).json(playlist);
+        }
+        else {
+            return res.status(400).json({msg: "Playlist không tồn tại"});
+        }
+
+    },
 
   //playlistRouter.delete('/playlist/:id', auth, playlistController.deletePlaylist);
   deletePlaylist: async (req, res) => {
