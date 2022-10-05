@@ -9,23 +9,21 @@ const FileController = {
       let newSong = new Song({
         name: req.body.name,
         file: req.body.file,
-        user:  mongoose.Types.ObjectId(req.body._id),
+        user:  mongoose.Types.ObjectId(req.user._id),
       });
-      // console.log('newSong', newSong)
       let success = await newSong.save();
+      let {name, image} = success;
       // console.log('success',success)
-      let songInfo = await Song.findOne().sort({ createdAt: -1 });
-      // console.log('songInfo', songInfo);
+      // let songInfo = await Song.findOne().sort({ createdAt: -1 });
       let newView = new View({
-        user: req.body._id,
-        song: songInfo._id,
+        user: req.user._id,
+        song: success._id,
       });
       // console.log('newView', newView);
       let createViewSuccess = await newView.save();
       if (success && createViewSuccess) {
         res.status(200).json({
           msg: "Đã tải bài hát thành công",
-          songInfo,
         });
       } else {
         res.status(403).json({
@@ -36,6 +34,19 @@ const FileController = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+
+  // songRouter.get('/song/uploaded', auth, FileController.getUploadedSongs);
+  getUploadedSongs: async (req, res) => {
+    try {
+      let userId = req.user._id;
+      let songs = await Song.find({user : mongoose.Types.ObjectId(userId)}).sort({"createAt":-1});
+      res.json({ songs });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+
 
   // songRouter.get('/songs', auth, FileController.getAllSong);
   getAllPublicSong: async (req, res) => {
