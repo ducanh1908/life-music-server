@@ -13,4 +13,5 @@ playlistRouter.get('/playlist/:id', auth, playlistController.getPlaylistById);
 playlistRouter.patch('/playlist/:id', auth, playlistController.updatePlaylistById);
 
 
+playlistRouter.get('/playlists', auth, playlistController.getAllPublicPlaylist);
 module.exports = playlistRouter;
