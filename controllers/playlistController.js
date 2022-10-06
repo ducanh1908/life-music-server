@@ -69,14 +69,12 @@ const PlaylistController = {
           let songsInPlaylist = await Song.find({ playlist: playlistId });
           songsInPlaylist.push({ playlistName: existPlaylist[0].name });
           // console.log('songsInPlaylist',songsInPlaylist);
-          res
-            .status(200)
-            .json({ msg: "Thêm bài hát thành công ", songsInPlaylist });
+          res.json({ msg: "Thêm bài hát thành công ", songsInPlaylist });
         } else {
-          res.status(404).json({ msg: "Không tìm thấy playlist" });
+          res.status(400).json({ msg: "Không tìm thấy playlist" });
         }
       } else {
-        res.status(404).json({ msg: "PlaylistId không tồn tại" });
+        res.status(400).json({ msg: "PlaylistId không tồn tại" });
       }
     } catch (err) {
       return res.status(500).json({ msg: err.message });
