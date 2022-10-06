@@ -115,8 +115,6 @@ const PlaylistController = {
       for (let i = 0; i < playlists.length; i++) {
         data.push(await Song.find({ playlist: playlists[i] }));
       }
-      // console.log("playlists", playlists);
-      // console.log("data", data);
       for (let i = 0; i < playlists.length; i++) {
         playlists[i]._doc.songs = data[i];
       }
@@ -133,8 +131,6 @@ const PlaylistController = {
       for (let i = 0; i < playlists.length; i++) {
         data.push(await Song.find({ playlist: playlists[i] }));
       }
-      // console.log("playlists", playlists);
-      // console.log("data", data);
       for (let i = 0; i < playlists.length; i++) {
         playlists[i]._doc.songs = data[i];
       }
@@ -241,6 +237,21 @@ const PlaylistController = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  getSongToPlaylist : async(req, res) => {
+      try {
+        let id = req.params.id;
+        let playlist = await Playlist.findById({_id : id})
+        if (!playlist) { 
+          return res.status(400).json({msg: "Playlist"});
+        }
+        let songs = await Song.find({playlist : playlist.id})
+         res.status(200).send({ data: { playlist, songs } });
+        
+      } catch (error) {
+        res.status(500).json({ msg: error.message });
+      }
+  }
 };
 
 module.exports = PlaylistController;
