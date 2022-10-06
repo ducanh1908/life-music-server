@@ -90,9 +90,7 @@ const PlaylistController = {
         await Song.findByIdAndUpdate({ _id: songId }, { playlist: null });
       }
       let songsInPlaylist = await Song.find({ playlist: playlistId });
-      console.log("songsInPlaylist", songsInPlaylist);
       let song = Song.findById({ _id: songId });
-      console.log("song", song);
       res
         .status(200)
         .json({
