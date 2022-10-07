@@ -8,7 +8,7 @@ const PlaylistController = {
         try {
             let name = req.body.name;
             let userId = req.params.id;
-            let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId), status : 2})
+            let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId), status : 1})
             let success = await newPlaylist.save();
 
             if(success) {
@@ -171,18 +171,18 @@ const PlaylistController = {
   },
 
   //playlistRouter.get('/playlist/:id', auth, playlistController.getPlaylistById);
-  getPlaylistById: async (req, res) => {
-    try {
-      let PlaylistId = req.params.PlaylistId;
-      let playlist = await Playlist.find({ _id: PlaylistId });
-      let songs = await Song.find({ playlist: PlaylistId });
-      playlist.push(songs);
-      res.status(200).json({ playlist });
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
-    }
-  },
-
+  // getPlaylistById: async (req, res) => {
+  //   try {
+  //     let PlaylistId = req.params.PlaylistId;
+  //     let playlist = await Playlist.find({ _id: PlaylistId });
+  //     let songs = await Song.find({ playlist: PlaylistId });
+  //     playlist.push(songs);
+  //     res.status(200).json({ playlist });
+  //   } catch (err) {
+  //     return res.status(500).json({ msg: err.message });
+  //   }
+  // },
+  
   //playlistRouter.get('/playlist/search/:key', auth, playlistController.searchPlaylist);
   searchPlaylist: async (req, res) => {
     try {
@@ -202,9 +202,7 @@ const PlaylistController = {
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
-  },
-           
-    
+  },            
     getPlaylistById : async(req, res)=> {
         let id = req.params.id;
         let playlist = await Playlist.findById({_id:id}); 
@@ -214,7 +212,6 @@ const PlaylistController = {
         else {
             return res.status(400).json({msg: "Playlist không tồn tại"});
         }
-
     },
 
   //playlistRouter.delete('/playlist/:id', auth, playlistController.deletePlaylist);
