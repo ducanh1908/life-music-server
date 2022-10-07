@@ -92,9 +92,7 @@ const PlaylistController = {
         await Song.findByIdAndUpdate({ _id: songId }, { playlist: null });
       }
       let songsInPlaylist = await Song.find({ playlist: playlistId });
-      console.log("songsInPlaylist", songsInPlaylist);
       let song = Song.findById({ _id: songId });
-      console.log("song", song);
       res
         .status(200)
         .json({
@@ -158,7 +156,7 @@ const PlaylistController = {
       );
       if (songIds && playlistId && updatedPlaylist) {
         songIds.map(async (songId, index) => {
-          console.log("songId", songId, index);
+          // console.log("songId", songId, index);
           await Song.findByIdAndUpdate(
             { _id: songId },
             { playlist: playlistId }
@@ -167,7 +165,6 @@ const PlaylistController = {
       }
       let playlist = await Playlist.find({ _id: playlistId });
       let songsInPlaylist = await Song.find({ playlist: playlistId });
-      console.log("songsInPlaylist", songsInPlaylist);
       res.status(200).json({
         msg: "Playlist updated successfully",
         playlist,
