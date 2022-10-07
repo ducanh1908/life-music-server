@@ -26,7 +26,7 @@ const SongSchema = new mongoose.Schema(
             type: String,
             default: "https://play-lh.googleusercontent.com/olj6n0kCUo_x3lNfgvzdGR5k_NEsz2D9PuC8evI0hYCHLSQHBhKY-cQwZ4EtWnac28o=w240-h480-rw"
         },
-        author: {
+        singerName: {
             type: String,
         },
         lyric: {
@@ -65,8 +65,12 @@ const SongSchema = new mongoose.Schema(
         guestViews: {
             type: Number,
             default : 0,
+        },
+        duration: {
+            type: Number,
+            default : 0
         }
-    },
+    },  
     { timestamps : true}
 )
 

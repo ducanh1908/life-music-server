@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = require('mongoose');
 
-//status 1 : public , status 2 : private
+//status 1 : private  , status 2 : public
 const PlaylistSchema = new mongoose.Schema(
     {
         name: {
@@ -23,9 +23,8 @@ const PlaylistSchema = new mongoose.Schema(
         },
         status: {
             type: Number,
-            default: 1
+            default: 2
         }
-
     },
     { timestamps : true}
 )

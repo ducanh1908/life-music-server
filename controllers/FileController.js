@@ -9,6 +9,7 @@ const FileController = {
       let newSong = new Song({
         name: req.body.name,
         file: req.body.file,
+        duration: req.body.duration,
         user:  mongoose.Types.ObjectId(req.user._id),
       });
       let success = await newSong.save();
@@ -40,7 +41,7 @@ const FileController = {
   getUploadedSongs: async (req, res) => {
     try {
       let userId = req.user._id;
-      let songs = await Song.find({user : mongoose.Types.ObjectId(userId)}).sort({"createAt":-1});
+      let songs = await Song.find({user : mongoose.Types.ObjectId(userId)}).sort({"createAt": 1});
       res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -52,7 +53,6 @@ const FileController = {
   getAllPublicSong: async (req, res) => {
     try {
       let songs = await Song.find({status : 1});
-     
       res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -73,10 +73,10 @@ const FileController = {
   // songRouter.patch('/song/:id', auth, FileController.updateSong);
   updateSong: async (req, res) => {
     try {
-      let { name, description, image, author, lyric } = req.body;
+      let { name, description, image, author, lyric, singerName } = req.body;
       await Song.findOneAndUpdate(
         { _id: req.params.id },
-        { name, description, image, author, lyric }
+        { name, description, image, author, lyric, singerName }
       );
       let songUpdated = await Song.findById({ _id: req.params.id });
       res.json({ songUpdated });
@@ -85,15 +85,33 @@ const FileController = {
     }
   },
 
+  // songRouter.patch('/song/status/:id', auth, FileController.songPublicOrPrivate);
+  songPublicOrPrivate: async (req, res) => {
+    try {
+      let  status  = req.body.status;
+      // console.log(req.params.id)
+      // console.log('status', req.body)
+      await Song.findOneAndUpdate(
+        { _id: mongoose.Types.ObjectId(req.params.id) },
+        { status }
+      );
+      res.json({ msg : 'update trạng thái thành công' });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+
+
   // songRouter.delete('/song/:id', auth, FileController.deleteSong);
   deleteSong: async (req, res) => {
     try {
       let id = req.params.id;
-      let song = await Song.findById({ _id: id });
+      let user = req.user._id;
+      let song = await Song.find({user : mongoose.Types.ObjectId(user)}, { _id: mongoose.Types.ObjectId(id) });
       if (!song) {
         res.status(500).json({ msg: "Bài hát không tồn tại" });
       } else {
-        await Song.deleteOne({ _id: id });
+        await Song.deleteOne({ _id: mongoose.Types.ObjectId(id) });
         res.json({
           msg: "Bài hát đã được xoá",
         });
@@ -108,8 +126,8 @@ const FileController = {
     try {
       let data = await Song.find({
         $or: [
-          { name: { $regex: req.params.key } },
-          { author: { $regex: req.params.key } },
+          { name: { $regex: req.params.key , $options: 'ig'} },
+          { author: { $regex: req.params.key ,$options: 'ig'} },
         ],
       });
       res.json(data);
@@ -128,7 +146,7 @@ const FileController = {
         res.status(200).json(song);
       }
     } catch (error) {
-      console.log(error)
+      return res.status(500).json({ msg: err.message });
     }
   }
 }
