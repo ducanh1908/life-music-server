@@ -8,7 +8,7 @@ const PlaylistController = {
         try {
             let name = req.body.name;
             let userId = req.params.id;
-            let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId), status : 2})
+            let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId), status : 1})
             let success = await newPlaylist.save();
 
             if(success) {
@@ -95,7 +95,7 @@ const PlaylistController = {
         .status(200)
         .json({
           msg: "Xóa bài hát khỏi playlist thành công ",
-          songsInPlaylist,
+          // songsInPlaylist,
         });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -203,8 +203,8 @@ const PlaylistController = {
       return res.status(500).json({ msg: err.message });
     }
   },
-           
-    
+
+
     getPlaylistById : async(req, res)=> {
         let id = req.params.id;
         let playlist = await Playlist.findById({_id:id}); 
