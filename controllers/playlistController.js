@@ -92,9 +92,7 @@ const PlaylistController = {
         await Song.findByIdAndUpdate({ _id: songId }, { playlist: null });
       }
       let songsInPlaylist = await Song.find({ playlist: playlistId });
-      console.log("songsInPlaylist", songsInPlaylist);
       let song = Song.findById({ _id: songId });
-      console.log("song", song);
       res
         .status(200)
         .json({
@@ -158,7 +156,7 @@ const PlaylistController = {
       );
       if (songIds && playlistId && updatedPlaylist) {
         songIds.map(async (songId, index) => {
-          console.log("songId", songId, index);
+          // console.log("songId", songId, index);
           await Song.findByIdAndUpdate(
             { _id: songId },
             { playlist: playlistId }
@@ -167,7 +165,6 @@ const PlaylistController = {
       }
       let playlist = await Playlist.find({ _id: playlistId });
       let songsInPlaylist = await Song.find({ playlist: playlistId });
-      console.log("songsInPlaylist", songsInPlaylist);
       res.status(200).json({
         msg: "Playlist updated successfully",
         playlist,
@@ -181,11 +178,9 @@ const PlaylistController = {
   //playlistRouter.get('/playlist/:id', auth, playlistController.getPlaylistById);
   getPlaylistById: async (req, res) => {
     try {
-      let PlaylistId = req.params.PlaylistId;
-      let playlist = await Playlist.find({ _id: PlaylistId });
-      let songs = await Song.find({ playlist: PlaylistId });
-      playlist.push(songs);
-      res.status(200).json({ playlist });
+      let playlistId = req.params.id;
+      let songs = await Song.find({ playlist: playlistId }).populate("playlist");
+      res.status(200).json(songs);
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -212,18 +207,6 @@ const PlaylistController = {
     }
   },
            
-    
-    getPlaylistById : async(req, res)=> {
-        let id = req.params.id;
-        let playlist = await Playlist.findById({_id:id}); 
-        if(playlist) {
-          return   res.status(200).json(playlist);
-        }
-        else {
-            return res.status(400).json({msg: "Playlist không tồn tại"});
-        }
-
-    },
 
   //playlistRouter.delete('/playlist/:id', auth, playlistController.deletePlaylist);
   deletePlaylist: async (req, res) => {

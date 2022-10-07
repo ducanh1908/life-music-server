@@ -53,7 +53,6 @@ const FileController = {
   getAllPublicSong: async (req, res) => {
     try {
       let songs = await Song.find({status : 1});
-     
       res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -74,10 +73,10 @@ const FileController = {
   // songRouter.patch('/song/:id', auth, FileController.updateSong);
   updateSong: async (req, res) => {
     try {
-      let { name, description, image, author, lyric } = req.body;
+      let { name, description, image, author, lyric, singerName } = req.body;
       await Song.findOneAndUpdate(
         { _id: req.params.id },
-        { name, description, image, author, lyric }
+        { name, description, image, author, lyric, singerName }
       );
       let songUpdated = await Song.findById({ _id: req.params.id });
       res.json({ songUpdated });
@@ -85,6 +84,23 @@ const FileController = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  // songRouter.patch('/song/status/:id', auth, FileController.songPublicOrPrivate);
+  songPublicOrPrivate: async (req, res) => {
+    try {
+      let  status  = req.body.status;
+      // console.log(req.params.id)
+      // console.log('status', req.body)
+      await Song.findOneAndUpdate(
+        { _id: mongoose.Types.ObjectId(req.params.id) },
+        { status }
+      );
+      res.json({ msg : 'update trạng thái thành công' });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+
 
   // songRouter.delete('/song/:id', auth, FileController.deleteSong);
   deleteSong: async (req, res) => {
@@ -119,8 +135,8 @@ const FileController = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
   getSongById: async (req, res) => {
-    
     try {
       let id = req.params.id;
       let song = await Song.findById({_id: id});
@@ -130,7 +146,7 @@ const FileController = {
         res.status(200).json(song);
       }
     } catch (error) {
-      console.log(error)
+      return res.status(500).json({ msg: err.message });
     }
   }
 }
