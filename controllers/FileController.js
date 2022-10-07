@@ -9,7 +9,7 @@ const FileController = {
       let newSong = new Song({
         name: req.body.name,
         file: req.body.file,
-        duration: req.body.duration,
+        // duration: req.body.duration,
         user:  mongoose.Types.ObjectId(req.user._id),
       });
       let success = await newSong.save();
@@ -41,7 +41,7 @@ const FileController = {
   getUploadedSongs: async (req, res) => {
     try {
       let userId = req.user._id;
-      let songs = await Song.find({user : mongoose.Types.ObjectId(userId)}).sort({"createAt": 1});
+      let songs = await Song.find({user : mongoose.Types.ObjectId(userId)}).sort({"createAt": -1});
       res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -127,9 +127,10 @@ const FileController = {
       let data = await Song.find({
         $or: [
           { name: { $regex: req.params.key , $options: 'ig'} },
-          { author: { $regex: req.params.key ,$options: 'ig'} },
+          // { author: { $regex: req.params.key ,$options: 'ig'} },
         ],
       });
+      console.log(data)
       res.json(data);
     } catch (err) {
       return res.status(500).json({ msg: err.message });
