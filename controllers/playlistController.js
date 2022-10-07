@@ -8,7 +8,7 @@ const PlaylistController = {
         try {
             let name = req.body.name;
             let userId = req.params.id;
-            let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId), status : 1})
+            let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId), status : 2})
             let success = await newPlaylist.save();
 
             if(success) {
@@ -90,7 +90,9 @@ const PlaylistController = {
         await Song.findByIdAndUpdate({ _id: songId }, { playlist: null });
       }
       let songsInPlaylist = await Song.find({ playlist: playlistId });
+      console.log("songsInPlaylist", songsInPlaylist);
       let song = Song.findById({ _id: songId });
+      console.log("song", song);
       res
         .status(200)
         .json({
@@ -189,16 +191,18 @@ const PlaylistController = {
     try {
       let playlists = await Playlist.find({
         $or: [
-          { name: { $regex: req.params.key } },
+          { name: { $regex: req.params.key, $options: 'ig' } },
+          // {song: { $regex: req.params.key } }
+          // {user: { $regex: req.params.key, $options: 'ig'  } }
         ],
       });
-      let data = [];
-      for (let i = 0; i < playlists.length; i++) {
-        data.push(await Song.find({ playlist: playlists[i]._id }));
-      }
-      for (let i = 0; i < playlists.length; i++) {
-        playlists[i]._doc.songs = data[i];
-      }
+      // let data = [];
+      // for (let i = 0; i < playlists.length; i++) {
+      //   data.push(await Song.find({ playlist: playlists[i]._id }));
+      // }
+      // for (let i = 0; i < playlists.length; i++) {
+      //   playlists[i]._doc.songs = data[i];
+      // }
       res.json({ playlists });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -215,6 +219,7 @@ const PlaylistController = {
         else {
             return res.status(400).json({msg: "Playlist không tồn tại"});
         }
+
 
     },
 

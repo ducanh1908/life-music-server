@@ -16,4 +16,5 @@ playlistRouter.get('/playlist-song/:id', auth, playlistController.getSongToPlayl
 
 
 
+playlistRouter.get('/playlists', auth, playlistController.getAllPublicPlaylist);
 module.exports = playlistRouter;
