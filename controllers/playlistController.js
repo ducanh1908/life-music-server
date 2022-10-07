@@ -171,17 +171,18 @@ const PlaylistController = {
   },
 
   //playlistRouter.get('/playlist/:id', auth, playlistController.getPlaylistById);
-  getPlaylistById: async (req, res) => {
-    try {
-      let PlaylistId = req.params.PlaylistId;
-      let playlist = await Playlist.find({ _id: PlaylistId });
-      let songs = await Song.find({ playlist: PlaylistId });
-      playlist.push(songs);
-      res.status(200).json({ playlist });
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
-    }
-  },
+  // getPlaylistById: async (req, res) => {
+  //   try {
+  //     let PlaylistId = req.params.id;
+  //     console.log(PlaylistId)
+  //     let playlist = await Playlist.find({ _id: PlaylistId });
+  //     let songs = await Song.find({ playlist: PlaylistId });
+  //     playlist.push(songs);
+  //     res.status(200).json({ playlist });
+  //   } catch (err) {
+  //     return res.status(500).json({ msg: err.message });
+  //   }
+  // },
 
   //playlistRouter.get('/playlist/search/:key', auth, playlistController.searchPlaylist);
   searchPlaylist: async (req, res) => {
@@ -207,7 +208,7 @@ const PlaylistController = {
 
     getPlaylistById : async(req, res)=> {
         let id = req.params.id;
-        let playlist = await Playlist.findById({_id:id}); 
+        let playlist = await Playlist.findById({_id:id});
         if(playlist) {
           return   res.status(200).json(playlist);
         }
