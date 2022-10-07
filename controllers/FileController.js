@@ -73,12 +73,14 @@ const FileController = {
   // songRouter.patch('/song/:id', auth, FileController.updateSong);
   updateSong: async (req, res) => {
     try {
-      let { name, description, image, author, lyric, singerName } = req.body;
+      console.log('updateSong ', req.body)
+      let { name, description, image, author, lyric, singerName, cate } = req.body;
       await Song.findOneAndUpdate(
         { _id: req.params.id },
-        { name, description, image, author, lyric, singerName }
+        { name, description, image, author, lyric, singerName, cate }
       );
       let songUpdated = await Song.findById({ _id: req.params.id });
+      console.log('songUpdated', songUpdated)
       res.json({ songUpdated });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -126,8 +128,7 @@ const FileController = {
     try {
       let data = await Song.find({
         $or: [
-          { name: { $regex: req.params.key } },
-          { author: { $regex: req.params.key } },
+          { name: { $regex: req.params.key, $options: 'ig' } },
         ],
       });
       res.json(data);
