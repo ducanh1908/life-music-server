@@ -13,7 +13,7 @@ const CateController = {
       if (success ) {
         res.status(200).json({
           msg: "Tạo Cate thành công",
-          Cate,
+          newCate,
         });
       } else {
         res.status(403).json({
@@ -24,6 +24,16 @@ const CateController = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  // cateRouter.get('/cate', auth, CateController.getAllCate);
+  getAllCate : async (req, res) => {
+    try {
+      let categories = await Category.find();
+      res.status(200).json(categories);
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  }
 };
 
 module.exports = CateController;

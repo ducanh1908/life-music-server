@@ -8,7 +8,7 @@ const PlaylistController = {
         try {
             let name = req.body.name;
             let userId = req.params.id;
-            let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId)})
+            let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId), status : 2})
             let success = await newPlaylist.save();
 
             if(success) {
@@ -126,6 +126,7 @@ const PlaylistController = {
     }
   },
 
+  //playlistRouter.get('/playlists', auth, playlistController.getAllPublicPlaylist);
   getAllPublicPlaylist: async (req, res) => {
     try {
       let playlists = await Playlist.find({status: 2});
@@ -180,11 +181,9 @@ const PlaylistController = {
   //playlistRouter.get('/playlist/:id', auth, playlistController.getPlaylistById);
   getPlaylistById: async (req, res) => {
     try {
-      let PlaylistId = req.params.PlaylistId;
-      let playlist = await Playlist.find({ _id: PlaylistId });
-      let songs = await Song.find({ playlist: PlaylistId });
-      playlist.push(songs);
-      res.status(200).json({ playlist });
+      let playlistId = req.params.id;
+      let songs = await Song.find({ playlist: playlistId }).populate("playlist");
+      res.status(200).json(songs);
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -195,34 +194,24 @@ const PlaylistController = {
     try {
       let playlists = await Playlist.find({
         $or: [
-          { name: { $regex: req.params.key } },
+          { name: { $regex: req.params.key, $options: 'ig' } },
+          // {song: { $regex: req.params.key } }
+          // {user: { $regex: req.params.key, $options: 'ig'  } }
         ],
       });
-      let data = [];
-      for (let i = 0; i < playlists.length; i++) {
-        data.push(await Song.find({ playlist: playlists[i]._id }));
-      }
-      for (let i = 0; i < playlists.length; i++) {
-        playlists[i]._doc.songs = data[i];
-      }
+      // let data = [];
+      // for (let i = 0; i < playlists.length; i++) {
+      //   data.push(await Song.find({ playlist: playlists[i]._id }));
+      // }
+      // for (let i = 0; i < playlists.length; i++) {
+      //   playlists[i]._doc.songs = data[i];
+      // }
       res.json({ playlists });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
   },
            
-    
-    getPlaylistById : async(req, res)=> {
-        let id = req.params.id;
-        let playlist = await Playlist.findById({_id:id}); 
-        if(playlist) {
-          return   res.status(200).json(playlist);
-        }
-        else {
-            return res.status(400).json({msg: "Playlist không tồn tại"});
-        }
-
-    },
 
   //playlistRouter.delete('/playlist/:id', auth, playlistController.deletePlaylist);
   deletePlaylist: async (req, res) => {
