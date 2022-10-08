@@ -110,8 +110,7 @@ const FileController = {
     try {
       let data = await Song.find({
         $or: [
-          { name: { $regex: req.params.key } },
-          { author: { $regex: req.params.key } },
+          { name: { $regex: req.params.key , $options: 'ig'} },
         ],
       });
       res.json(data);
