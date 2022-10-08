@@ -8,7 +8,7 @@ const PlaylistController = {
         try {
             let name = req.body.name;
             let userId = req.params.id;
-            let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId), status : 2})
+            let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId), status : 1})
             let success = await newPlaylist.save();
 
             if(success) {

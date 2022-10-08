@@ -1,37 +1,26 @@
 const Like = require("../models/like.model");
-const Song = require("../models/song.model")
+const Song = require("../models/song.model");
+const mongoose = require('mongoose');
 
 const LikeController = {
-    //likeRouter.post('/song/like', auth, likeController.likeOrNotLike)
+    //likeRouter.post('/song/like/:id', auth, likeController.likeOrNotLike)
     likeOrNotLike : async (req, res) => {
         try {
             let userId = req.body.userId;
-            let songId = req.body.songId;
+            let songId = req.params.id;
             let like = req.body.like;
-            let isLikeDocCreated = Like.findOne({user : userId, song: songId});
-            if(like) {
-                if(isLikeDocCreated){
-                    await Like.findByIdAndUpdate({_id: isLikeDocCreated._id}, {like : true})
-                } else {
-                    let newLike = new Like({user : userId, song: songId, like: true})
-                    let success = await newLike.save();
-                    if(success) {
-                        res.json({
-                            msg: "Liked", 
-                            success
-                        });
-                    } else {
-                        res.json({
-                            msg: "Like false"
-                        })
-                    }
+            let likeDoc = Like.find({song: mongoose.Types.ObjectId(songId)});
+            console.log(likeDoc)
+            // let listUsers = likeDoc._doc.user;
+            // console.log('listUsers', listUsers)
+            if(like && userId) {
+                let index = listUsers.indexOf(userId);
+
+                if(index) {
+                    let updateLike = Like.findByIdAndUpdate({_id : mongoose.Types.ObjectId(likeDoc._id)}, {})
                 }
-            } else {
-                await Like.findByIdAndUpdate({_id: isLikeDocCreated._id}, {like : false})
-                res.json({
-                    msg: "Not like"
-                })
             }
+            res.json({msg: "da vao"})
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
@@ -62,8 +51,8 @@ const LikeController = {
         }
     },
 
-    //likeRouter.get('/song/like/amount', auth, likeController.getLikeAmount);
-    getLikeAmount : async (req, res) => {
+    //likeRouter.get('/song/like/:id', auth, likeController.getLikeNumber);
+    getLikeNumber : async (req, res) => {
         try {
            let songId = req.body.songId;
            let amount = Like.countDocuments({song : songId});
