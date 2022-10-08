@@ -91,7 +91,6 @@ const PlaylistController = {
       }
       let songsInPlaylist = await Song.find({ playlist: playlistId });
       let song = Song.findById({ _id: songId });
-      console.log("song", song);
       res
         .status(200)
         .json({
@@ -188,25 +187,21 @@ const PlaylistController = {
     try {
       let playlists = await Playlist.find({
         $or: [
-          { name: { $regex: req.params.key, $options: 'ig' } },
-          // {song: { $regex: req.params.key } }
-          // {user: { $regex: req.params.key, $options: 'ig'  } }
+          { name: { $regex: req.params.key } },
         ],
       });
-      // let data = [];
-      // for (let i = 0; i < playlists.length; i++) {
-      //   data.push(await Song.find({ playlist: playlists[i]._id }));
-      // }
-      // for (let i = 0; i < playlists.length; i++) {
-      //   playlists[i]._doc.songs = data[i];
-      // }
+      let data = [];
+      for (let i = 0; i < playlists.length; i++) {
+        data.push(await Song.find({ playlist: playlists[i]._id }));
+      }
+      for (let i = 0; i < playlists.length; i++) {
+        playlists[i]._doc.songs = data[i];
+      }
       res.json({ playlists });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
   },
-
-
     getPlaylistById : async(req, res)=> {
         let id = req.params.id;
         let playlist = await Playlist.findById({_id:id});
@@ -216,7 +211,6 @@ const PlaylistController = {
         else {
             return res.status(400).json({msg: "Playlist không tồn tại"});
         }
-
 
     },
 
