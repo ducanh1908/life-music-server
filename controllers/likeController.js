@@ -11,8 +11,10 @@ const LikeController = {
             let userId = req.body.userId;
             let like = req.body.like;
             let songId = req.params.id;
-            let likeDoc = await Like.findById(likeId).populate('song').populate( 'user').exec();
+            let likeDoc = await Like.findById(likeId).exec();
+            console.log('likeDoc', likeDoc);
             let userDoc = await User.findById(userId).populate('likeSongs');
+            console.log('userDoc', userDoc);
             let songIndex = userDoc.likeSongs.indexOf(songId);
             let index = likeDoc.user.indexOf(userId);
             if(like ) {
@@ -22,7 +24,7 @@ const LikeController = {
                     }
                     let success = await Like.findByIdAndUpdate({_id: mongoose.Types.ObjectId(likeId)}, {$push: {user : userId}}, { upsert: true, new: true});
                     let likeNumber = success.user.length;
-                    res.status(200).json({msg: 'like bài hát thành công', likeNumber});
+                    res.status(200).json({msg: 'like bài hát thành công', likeNumber, like});
                 } else if (index !== -1) {
                     res.status(200).json({msg: "bài hát đã được like"});
                 }
@@ -33,7 +35,8 @@ const LikeController = {
                         }
                         let success = await Like.findByIdAndUpdate({_id: mongoose.Types.ObjectId(likeId)},{ $pullAll: { user: [userId] } }, { upsert: true, new: true});
                         let likeNumber = success.user.length;
-                        res.status(200).json({msg: 'unlike thành công', likeNumber});
+                        like = false;
+                        res.status(200).json({msg: 'unlike thành công', likeNumber, like});
                     } else if (index === -1) {
                         res.status(200).json({msg: 'đã dislike rồi'});
                     }
