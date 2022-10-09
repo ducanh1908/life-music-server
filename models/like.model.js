@@ -7,12 +7,12 @@ const LikeSchema = new mongoose.Schema(
         user: [{
             type: Schema.Types.ObjectId,
             ref: "User",
+            default: [],
         }],
         song: {
             type: Schema.Types.ObjectId,
             ref: "Song",
-            required: true,
-        },
+        }
     },
     { timestamps : true}
 )

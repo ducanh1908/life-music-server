@@ -1,67 +1,78 @@
 const Like = require("../models/like.model");
 const Song = require("../models/song.model");
+const User = require("../models/user");
 const mongoose = require('mongoose');
 
 const LikeController = {
     //likeRouter.post('/song/like/:id', auth, likeController.likeOrNotLike)
-    likeOrNotLike : async (req, res) => {
+    likeSong : async (req, res) => {
         try {
+            let likeId = req.body.likeId;
             let userId = req.body.userId;
-            let songId = req.params.id;
             let like = req.body.like;
-            let likeDoc = Like.find({song: mongoose.Types.ObjectId(songId)});
-            console.log(likeDoc)
-            // let listUsers = likeDoc._doc.user;
-            // console.log('listUsers', listUsers)
-            if(like && userId) {
-                let index = listUsers.indexOf(userId);
-
-                if(index) {
-                    let updateLike = Like.findByIdAndUpdate({_id : mongoose.Types.ObjectId(likeDoc._id)}, {})
+            let songId = req.params.id;
+            let likeDoc = await Like.findById(likeId).populate('song').populate( 'user').exec();
+            let userDoc = await User.findById(userId).populate('likeSongs');
+            let songIndex = userDoc.likeSongs.indexOf(songId);
+            let index = likeDoc.user.indexOf(userId);
+            if(like ) {
+                if(index === -1) {
+                    if(songIndex === -1) {
+                        await User.findByIdAndUpdate({_id: mongoose.Types.ObjectId(userId)}, {$push: {likeSongs : songId}}, { upsert: true, new: true});
+                    }
+                    let success = await Like.findByIdAndUpdate({_id: mongoose.Types.ObjectId(likeId)}, {$push: {user : userId}}, { upsert: true, new: true});
+                    let likeNumber = success.user.length;
+                    res.status(200).json({msg: 'like bài hát thành công', likeNumber});
+                } else if (index !== -1) {
+                    res.status(200).json({msg: "bài hát đã được like"});
                 }
+            } else {
+                    if(index !== -1) {
+                        if(songIndex !== -1) {
+                            await User.findByIdAndUpdate({_id: mongoose.Types.ObjectId(userId)}, {$pull: {likeSongs : songId}}, { upsert: true, new: true});
+                        }
+                        let success = await Like.findByIdAndUpdate({_id: mongoose.Types.ObjectId(likeId)},{ $pullAll: { user: [userId] } }, { upsert: true, new: true});
+                        let likeNumber = success.user.length;
+                        res.status(200).json({msg: 'unlike thành công', likeNumber});
+                    } else if (index === -1) {
+                        res.status(200).json({msg: 'đã dislike rồi'});
+                    }
             }
-            res.json({msg: "da vao"})
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
-       
     },
 
-    //likeRouter.get('/song/like', auth, likeController.getAllLikedSongs);
-    getAllLikedSongs: async (req, res) => {
-        try {
-           let userId = req.body.userId;
-           let data = await Like.find({user :userId, like: true});
-           let songs = [];
-           if(data) {
-             if(isArray(data)){
-                data.forEach(async (item) => {
-                    songs.push(await Song.findOne({_id: item.song}))
-                })
-                res.json({songs})
-             } else {
-               let song = await Song.findOne({_id: data.song});
-                res.json({song})
-             }
-           } else {
-                res.json({msg : "empty"});
-           }
-        } catch (err) {
-            return res.status(500).json({msg: err.message});
-        }
-    },
+   //likeRouter.get('/song/likedlist/:id', auth, likeController.getAllLikedSongs);
+   getAllLikedSongs: async (req, res) => {
+    try {
+       let userId = req.params.id;
+       let userDoc = await User.findById(userId).populate('likeSongs');
+       userDoc = userDoc.toObject();
+       delete userDoc.password;
+       delete userDoc.role;
+       delete userDoc.accountType;
+       delete userDoc.createdAt;
+       delete userDoc.updatedAt;
+        res.status(201).json({userDoc});
+    } catch (err) {
+        return res.status(500).json({msg: err.message});
+    }
+},
 
-    //likeRouter.get('/song/like/:id', auth, likeController.getLikeNumber);
-    getLikeNumber : async (req, res) => {
-        try {
-           let songId = req.body.songId;
-           let amount = Like.countDocuments({song : songId});
-           res.status(200).json({likeAmount : amount})
-        } catch (err) {
-            return res.status(500).json({msg: err.message});
-            
-        }
-    },
+//likeRouter.get('/song/like/:id', auth, likeController.getLikeNumber);
+getLikeNumber : async (req, res) => {
+    try {
+       let songId = req.params.id;
+       let song = Song.findById(songId);
+       let like = Like.findById(song.like);
+       let amount = like.user.length;
+       res.status(200).json({amount})
+    } catch (err) {
+        return res.status(500).json({msg: err.message});
+        
+    }
+},
 };
 
 module.exports = LikeController;

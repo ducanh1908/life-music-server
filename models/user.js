@@ -52,8 +52,12 @@ const UserSchema = new mongoose.Schema(
         role:{
             type:Number,
             default: 1
-        }
-
+        },
+        likeSongs: [{
+            type: Schema.Types.ObjectId,
+            ref: "Song",
+            default: [],
+        }],
     },
     { timestamps : true}
 );
