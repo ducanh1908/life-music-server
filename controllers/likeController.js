@@ -12,9 +12,7 @@ const LikeController = {
             let like = req.body.like;
             let songId = req.params.id;
             let likeDoc = await Like.findById(likeId).exec();
-            console.log('likeDoc', likeDoc);
             let userDoc = await User.findById(userId).populate('likeSongs');
-            console.log('userDoc', userDoc);
             let songIndex = userDoc.likeSongs.indexOf(songId);
             let index = likeDoc.user.indexOf(userId);
             if(like ) {
