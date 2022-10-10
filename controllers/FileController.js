@@ -9,7 +9,7 @@ const FileController = {
       let newSong = new Song({
         name: req.body.name,
         file: req.body.file,
-        // duration: req.body.duration,
+        duration: req.body.duration,
         user:  mongoose.Types.ObjectId(req.user._id),
       });
       let success = await newSong.save();
@@ -20,9 +20,13 @@ const FileController = {
         user: req.user._id,
         song: success._id,
       });
-      // console.log('newView', newView);
+      let newLike = new Like({
+        song: success._id
+      })
+      let createLikeSuccess = await newLike.save();
       let createViewSuccess = await newView.save();
-      if (success && createViewSuccess) {
+      if (success && createViewSuccess && createLikeSuccess) {
+        await Song.findByIdAndUpdate({_id : newSong._id}, {like : newLike._id})
         res.status(200).json({
           msg: "Đã tải bài hát thành công",
         });
@@ -35,10 +39,10 @@ const FileController = {
       return res.status(500).json({ msg: err.message });
     }
   },
-  // songRouter.get('/song', auth, FileController.getAllSong);
-  getUserSong: async (req, res) => {
+  // songRouter.get('/songs', auth, FileController.getAllSong);
+  getAllPublicSong: async (req, res) => {
     try {
-      let songs = await Song.find({status : 1});
+      let songs = await Song.find({status : 2});
       res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -58,10 +62,10 @@ const FileController = {
   // songRouter.patch('/song/:id', auth, FileController.updateSong);
   updateSong: async (req, res) => {
     try {
-      let { name, description, image, author, lyric, singerName } = req.body;
+      let { name, description, image, author, lyric, singerName, cate } = req.body;
       await Song.findOneAndUpdate(
         { _id: req.params.id },
-        { name, description, image, author, lyric, singerName }
+        { name, description, image, author, lyric, singerName, cate }
       );
       let songUpdated = await Song.findById({ _id: req.params.id });
       res.json({ songUpdated });
@@ -106,6 +110,19 @@ const FileController = {
     }
   },
 
+  // songRouter.get('/song/search/:key', auth, FileController.searchSong);
+  searchSong: async (req, res) => {
+    try {
+      let data = await Song.find({
+        $or: [
+          { name: { $regex: req.params.key, $options: 'ig' } },
+        ],
+      });
+      res.json(data);
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 
   getSongById: async (req, res) => {
     try {
@@ -116,7 +133,7 @@ const FileController = {
       } else {
         res.status(200).json(song);
       }
-    } catch (error) {
+    } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
   },
