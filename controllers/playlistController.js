@@ -10,7 +10,6 @@ const PlaylistController = {
             let userId = req.params.id;
             let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId), status : 1})
             let success = await newPlaylist.save();
-
             if(success) {
                 res.json({
                     msg: "Tạo playlist thành công", 
@@ -190,14 +189,14 @@ const PlaylistController = {
           { name: { $regex: req.params.key } },
         ],
       });
-      let data = [];
-      for (let i = 0; i < playlists.length; i++) {
-        data.push(await Song.find({ playlist: playlists[i]._id }));
-      }
-      for (let i = 0; i < playlists.length; i++) {
-        playlists[i]._doc.songs = data[i];
-      }
-      res.json({ playlists });
+      // let data = [];
+      // for (let i = 0; i < playlists.length; i++) {
+      //   data.push(await Song.find({ playlist: playlists[i]._id }));
+      // }
+      // for (let i = 0; i < playlists.length; i++) {
+      //   playlists[i]._doc.songs = data[i];
+      // }
+      // res.json({ playlists });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -211,7 +210,6 @@ const PlaylistController = {
         else {
             return res.status(400).json({msg: "Playlist không tồn tại"});
         }
-
     },
 
   //playlistRouter.delete('/playlist/:id', auth, playlistController.deletePlaylist);
