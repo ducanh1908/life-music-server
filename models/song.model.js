@@ -56,7 +56,6 @@ const SongSchema = new mongoose.Schema(
         like: {
             type: Schema.Types.ObjectId,
             ref: "Like",
-           
         },
         status: {
             type: Number,

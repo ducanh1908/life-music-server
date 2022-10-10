@@ -1,5 +1,6 @@
 const Song = require("../models/song.model");
 const View = require("../models/view.model");
+const Like = require('../models/like.model');
 const mongoose = require('mongoose')
 
 const FileController = {
@@ -20,11 +21,15 @@ const FileController = {
         user: req.user._id,
         song: success._id,
       });
-      // console.log('newView', newView);
+      let newLike = new Like({
+        song: success._id
+      })
+      let createLikeSuccess = await newLike.save();
       let createViewSuccess = await newView.save();
-      if (success && createViewSuccess) {
+      if (success && createViewSuccess && createLikeSuccess) {
+        await Song.findByIdAndUpdate({_id : newSong._id}, {like : newLike._id})
         res.status(200).json({
-          msg: "Đã tải bài hát thành công",
+          msg: "Đã tạo bài hát thành công",
         });
       } else {
         res.status(403).json({
@@ -53,6 +58,7 @@ const FileController = {
   getAllPublicSong: async (req, res) => {
     try {
       let songs = await Song.find({status : 1});
+     
       res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -155,7 +161,7 @@ const FileController = {
         res.status(200).json(song);
       }
     } catch (error) {
-      return res.status(500).json({ msg: err.message });
+      return res.status(500).json({ msg: error.message });
     }
   }
 }

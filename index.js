@@ -14,6 +14,7 @@ app.use('/api', require('./routers/albumRouter'));
 app.use('/api', require('./routers/playlistRouter'));
 app.use('/api', require('./routers/cateRouter'));
 app.use('/api', require('./routers/singerRouter'));
+app.use('/api', require('./routers/likeRouter'));
 
 
 const DB = process.env.MONGODB_URL
