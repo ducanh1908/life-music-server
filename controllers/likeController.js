@@ -12,10 +12,10 @@ const LikeController = {
             let like = req.body.like;
             let songId = req.params.id;
             let likeDoc = await Like.findById(likeId).exec();
-            let userDoc = await User.findById(userId).populate('likeSongs');
+            let userDoc = await User.findById(userId).exec();
             let songIndex = userDoc.likeSongs.indexOf(songId);
             let index = likeDoc.user.indexOf(userId);
-            if(like ) {
+            if(like) {
                 if(index === -1) {
                     if(songIndex === -1) {
                         await User.findByIdAndUpdate({_id: mongoose.Types.ObjectId(userId)}, {$push: {likeSongs : songId}}, { upsert: true, new: true});
@@ -28,15 +28,14 @@ const LikeController = {
                 }
             } else {
                     if(index !== -1) {
-                        if(songIndex !== -1) {
-                            await User.findByIdAndUpdate({_id: mongoose.Types.ObjectId(userId)}, {$pull: {likeSongs : songId}}, { upsert: true, new: true});
-                        }
+                        await User.findByIdAndUpdate({_id: mongoose.Types.ObjectId(userId)}, {$pull: {likeSongs : songId}}, { upsert: true, new: true});
                         let success = await Like.findByIdAndUpdate({_id: mongoose.Types.ObjectId(likeId)},{ $pullAll: { user: [userId] } }, { upsert: true, new: true});
                         let likeNumber = success.user.length;
                         like = false;
                         res.status(200).json({msg: 'unlike thành công', likeNumber, like});
                     } else if (index === -1) {
-                        res.status(200).json({msg: 'đã dislike rồi'});
+                        res.status(200).json({msg: 'đã unlike rồi'});
+
                     }
             }
         } catch (err) {
@@ -55,6 +54,8 @@ const LikeController = {
        delete userDoc.accountType;
        delete userDoc.createdAt;
        delete userDoc.updatedAt;
+       delete userDoc.email;
+       delete userDoc.phone;
         res.status(201).json({userDoc});
     } catch (err) {
         return res.status(500).json({msg: err.message});

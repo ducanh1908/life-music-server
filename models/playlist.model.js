@@ -23,8 +23,13 @@ const PlaylistSchema = new mongoose.Schema(
         },
         status: {
             type: Number,
-            default: 2
+            default: 1
+        },
+        description: {
+            type: String,
+            default: 'Quyen dep trai'
         }
+
     },
     { timestamps : true}
 )

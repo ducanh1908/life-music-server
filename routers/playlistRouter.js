@@ -10,5 +10,11 @@ playlistRouter.patch('/playlist/update/:id', auth, playlistController.updatePlay
 playlistRouter.delete('/playlist/:id', auth, playlistController.deletePlaylist);
 playlistRouter.post('/playlist/remove/:id', auth, playlistController.removeSongFromPlaylist);
 playlistRouter.get('/playlist/:id', auth, playlistController.getPlaylistById);
+playlistRouter.patch('/playlist/:id', auth, playlistController.updatePlaylistById);
+playlistRouter.get('/playlists', auth, playlistController.getAllPublicPlaylist);
+playlistRouter.get('/playlist-song/:id', auth, playlistController.getSongToPlaylist);
+
+
+
 playlistRouter.get('/playlists', auth, playlistController.getAllPublicPlaylist);
 module.exports = playlistRouter;

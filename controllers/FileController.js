@@ -1,7 +1,7 @@
 const Song = require("../models/song.model");
 const View = require("../models/view.model");
+const Like = require('../models/like.model');
 const mongoose = require('mongoose')
-const Playlist = require("../models/playlist.model");
 
 const FileController = {
   // songRouter.post('/song', auth, FileController.addNewSong);
@@ -15,7 +15,6 @@ const FileController = {
       });
       let success = await newSong.save();
       let {name, image} = success;
-      // console.log('success',success)
       // let songInfo = await Song.findOne().sort({ createdAt: -1 });
       let newView = new View({
         user: req.user._id,
@@ -29,7 +28,7 @@ const FileController = {
       if (success && createViewSuccess && createLikeSuccess) {
         await Song.findByIdAndUpdate({_id : newSong._id}, {like : newLike._id})
         res.status(200).json({
-          msg: "Đã tải bài hát thành công",
+          msg: "Đã tạo bài hát thành công",
         });
       } else {
         res.status(403).json({
@@ -40,6 +39,8 @@ const FileController = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+
   // songRouter.get('/song/uploaded', auth, FileController.getUploadedSongs);
   getUploadedSongs: async (req, res) => {
     try {
@@ -51,6 +52,7 @@ const FileController = {
     }
   },
 
+
   // songRouter.get('/songs', auth, FileController.getAllSong);
   getAllPublicSong: async (req, res) => {
     try {
@@ -61,11 +63,13 @@ const FileController = {
     }
   },
 
-  getUserSong: async (req, res) => {
+  // songRouter.get('/song', auth, FileController.getSongByName);
+  getSongByName: async (req, res) => {
     try {
-      // let userId = req.params.id;
-      let songs = await Song.find({ status:1});
-    }catch (err) {
+      let songName = req.body.name;
+      let songs = await Song.find({ name: songName });
+      res.json({ songs });
+    } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
   },
@@ -73,10 +77,10 @@ const FileController = {
   // songRouter.patch('/song/:id', auth, FileController.updateSong);
   updateSong: async (req, res) => {
     try {
-      let { name, description, image, author, lyric, singerName, cate } = req.body;
+      let { name, description, image, author, lyric, singerName } = req.body;
       await Song.findOneAndUpdate(
         { _id: req.params.id },
-        { name, description, image, author, lyric, singerName, cate }
+        { name, description, image, author, lyric, singerName }
       );
       let songUpdated = await Song.findById({ _id: req.params.id });
       res.json({ songUpdated });
@@ -134,7 +138,30 @@ const FileController = {
       return res.status(500).json({ msg: err.message });
     }
   },
+  getAllSongByPlaylistId:async (req, res) => {
+    try {
+      let id = req.params.id;
+      console.log(id)
+      let songs = await Song.find({playlist: id});
+      res.json({ songs });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  getSongById: async (req, res) => {
 
+    try {
+      let id = req.params.id;
+      let song = await Song.findById({_id: id});
+      if (!song) {
+        res.status(500).json({ msg: "Bài hát không tồn tại" });
+      } else {
+        res.status(200).json(song);
+      }
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+  },
   getSongUser: async (req, res) => {
     try {
       let userId = req.params.id;
@@ -144,21 +171,5 @@ const FileController = {
       return res.status(500).json({ msg: err.message });
     }
   }
-
-  // // songRouter.get('/song/search/:key', auth, FlieController.searchSong);
-  // searchSongUser: async (req, res) => {
-  //   try {
-  //     let data = await Song.find({ status: 1,
-  //       $or: [
-  //         { name: { $regex: req.params.key , $options: 'ig'} },
-  //         // { author: { $regex: req.params.key ,$options: 'ig'} },
-  //       ],
-  //     });
-  //     console.log(data)
-  //     res.json(data);
-  //   } catch (err) {
-  //     return res.status(500).json({ msg: err.message });
-  //   }
-  // },
 }
 module.exports = FileController;

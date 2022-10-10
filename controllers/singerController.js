@@ -52,7 +52,6 @@ const SingerController = {
       return res.status(500).json({ msg: err.message });
     }
   },
-
   //singerRouter.delete('/singer/:id', auth, singerController.deleteSinger);
   deleteSinger: async (req, res) => {
     try {
