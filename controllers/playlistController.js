@@ -3,28 +3,54 @@ const Song = require("../models/song.model");
 const mongoose = require("mongoose");
 
 const PlaylistController = {
-    //playlist/:id, auth, playlistController.createNewPlaylist
-    createNewPlaylist: async (req, res) => {
-        try {
-            let name = req.body.name;
-            let userId = req.params.id;
-            let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId), status : 1})
-            let success = await newPlaylist.save();
+  //playlist/:id, auth, playlistController.createNewPlaylist
+  createNewPlaylist: async (req, res) => {
+    try {
+      let name = req.body.name;
+      let userId = req.params.id;
+      let newPlaylist = new Playlist({name : name, user: mongoose.Types.ObjectId(userId), status : 1})
+      let success = await newPlaylist.save();
 
-            if(success) {
-                res.json({
-                    msg: "Tạo playlist thành công", 
-                    success
-                });
-            } else {
-                res.json({
-                    msg: "Tạo playlist thất bại"
-                })
-            }
-        } catch (err) {
-            return res.status(500).json({msg: err.message})
-        }
-    },
+      if(success) {
+        res.json({
+          msg: "Tạo playlist thành công",
+          success
+        });
+      } else {
+        res.json({
+          msg: "Tạo playlist thất bại"
+        })
+      }
+    } catch (err) {
+      return res.status(500).json({msg: err.message})
+    }
+  },
+
+  //playlist/:id, auth, playlistController.createNewPlaylist
+  createNewPublicPlaylist: async (req, res) => {
+    try {
+      let name = req.body.name;
+      let userId = req.params.id;
+      let newPlaylist = new Playlist({
+        name: name,
+        user: mongoose.Types.ObjectId(userId),
+        status: 2
+      });
+      let success = await newPlaylist.save();
+      if (success) {
+        res.json({
+          msg: "Tạo public playlist thành công",
+          success,
+        });
+      } else {
+        res.json({
+          msg: "Tạo public playlist thất bại",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 
   // /playlist/addsong/:id, auth, playlistController.addSongIntoPlaylist
   addSongIntoPlaylist: async (req, res) => {
@@ -37,15 +63,15 @@ const PlaylistController = {
       if (songId && playlistId) {
         if (existPlaylist && existSong) {
           await Song.findByIdAndUpdate(
-            { _id: songId },
-            { playlist: playlistId }
+              { _id: songId },
+              { playlist: playlistId }
           );
           let songsInPlaylist = await Song.find({ playlist: playlistId });
           songsInPlaylist.push({ playlistName: existPlaylist[0].name });
           // console.log('songsInPlaylist',songsInPlaylist);
           res
-            .status(200)
-            .json({ msg: "Thêm bài hát thành công ", songsInPlaylist });
+              .status(200)
+              .json({ msg: "Thêm bài hát thành công ", songsInPlaylist });
         } else {
           res.status(404).json({ msg: "Không tìm thấy playlist" });
         }
@@ -68,18 +94,18 @@ const PlaylistController = {
       let songsInPlaylist = await Song.find({ playlist: playlistId });
       let song = Song.findById({ _id: songId });
       res
-        .status(200)
-        .json({
-          msg: "Xóa bài hát khỏi playlist thành công ",
-          songsInPlaylist,
-        });
+          .status(200)
+          .json({
+            msg: "Xóa bài hát khỏi playlist thành công ",
+            songsInPlaylist,
+          });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
   },
 
   //playlistRouter.get('/playlists/:id', auth, playlistController.getAllUserPlaylist);
-  getUserPlaylist: async (req, res) => {
+  getAllUserPlaylist: async (req, res) => {
     try {
       let userId = req.params.id;
       let playlists = await Playlist.find({ user: userId });
@@ -98,10 +124,10 @@ const PlaylistController = {
     }
   },
 
-  //playlistRouter.get('/playlist', auth, playlistController.getAllPublicPlaylist);
-  getAllUserPlaylist: async (req, res) => {
+  //playlistRouter.get('/playlists', auth, playlistController.getAllPublicPlaylist);
+  getAllPublicPlaylist: async (req, res) => {
     try {
-      let playlists = await Playlist.find({status: 1});
+      let playlists = await Playlist.find({status: 2});
       let data = [];
       for (let i = 0; i < playlists.length; i++) {
         data.push(await Song.find({ playlist: playlists[i] }));
@@ -125,15 +151,15 @@ const PlaylistController = {
       let playlistId = req.params.id;
       let songIds = req.body.songIds;
       let updatedPlaylist = await Playlist.findByIdAndUpdate(
-        { _id: playlistId },
-        { name: name, cate: cateId }
+          { _id: playlistId },
+          { name: name, cate: cateId }
       );
       if (songIds && playlistId && updatedPlaylist) {
         songIds.map(async (songId, index) => {
           // console.log("songId", songId, index);
           await Song.findByIdAndUpdate(
-            { _id: songId },
-            { playlist: playlistId }
+              { _id: songId },
+              { playlist: playlistId }
           );
         });
       }
@@ -160,6 +186,28 @@ const PlaylistController = {
     }
   },
 
+  //playlistRouter.get('/playlist/search/:key', auth, playlistController.searchPlaylist);
+  searchPlaylist: async (req, res) => {
+    try {
+      let playlists = await Playlist.find({
+        $or: [
+          { name: { $regex: req.params.key } },
+        ],
+      });
+      // let data = [];
+      // for (let i = 0; i < playlists.length; i++) {
+      //   data.push(await Song.find({ playlist: playlists[i]._id }));
+      // }
+      // for (let i = 0; i < playlists.length; i++) {
+      //   playlists[i]._doc.songs = data[i];
+      // }
+      // res.json({ playlists });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+
+
   //playlistRouter.delete('/playlist/:id', auth, playlistController.deletePlaylist);
   deletePlaylist: async (req, res) => {
     try {
@@ -173,29 +221,6 @@ const PlaylistController = {
           msg: "Xóa playlist thành công",
         });
       }
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
-    }
-  },
-
-  //playlistRouter.get('/playlist/search/:key', auth, playlistController.searchPlaylist);
-  searchPlaylistUser: async (req, res) => {
-    try {
-      let playlists = await Playlist.find({ status: 1,
-        $or: [
-          { name: { $regex: req.params.key, $options: 'ig' } },
-          // {song: { $regex: req.params.key } }
-          // {user: { $regex: req.params.key, $options: 'ig'  } }
-        ],
-      });
-      // let data = [];
-      // for (let i = 0; i < playlists.length; i++) {
-      //   data.push(await Song.find({ playlist: playlists[i]._id }));
-      // }
-      // for (let i = 0; i < playlists.length; i++) {
-      //   playlists[i]._doc.songs = data[i];
-      // }
-      res.json({ playlists });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
