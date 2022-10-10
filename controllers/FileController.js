@@ -35,22 +35,8 @@ const FileController = {
       return res.status(500).json({ msg: err.message });
     }
   },
-
-
-  // songRouter.get('/song/uploaded', auth, FileController.getUploadedSongs);
-  getUploadedSongs: async (req, res) => {
-    try {
-      let userId = req.user._id;
-      let songs = await Song.find({user : mongoose.Types.ObjectId(userId)}).sort({"createAt": -1});
-      res.json({ songs });
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
-    }
-  },
-
-
-  // songRouter.get('/songs', auth, FileController.getAllSong);
-  getAllPublicSong: async (req, res) => {
+  // songRouter.get('/song', auth, FileController.getAllSong);
+  getUserSong: async (req, res) => {
     try {
       let songs = await Song.find({status : 1});
       res.json({ songs });
@@ -58,12 +44,11 @@ const FileController = {
       return res.status(500).json({ msg: err.message });
     }
   },
-
-  // songRouter.get('/song', auth, FileController.getSongByName);
-  getSongByName: async (req, res) => {
+  // songRouter.get('/song/uploaded', auth, FileController.getUploadedSongs);
+  getUploadedSongs: async (req, res) => {
     try {
-      let songName = req.body.name;
-      let songs = await Song.find({ name: songName });
+      let userId = req.user._id;
+      let songs = await Song.find({user : mongoose.Types.ObjectId(userId)}).sort({"createAt": 1});
       res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -121,21 +106,6 @@ const FileController = {
     }
   },
 
-  // songRouter.get('/song/search/:key', auth, FileController.searchSong);
-  searchSong: async (req, res) => {
-    try {
-      let data = await Song.find({
-        $or: [
-          { name: { $regex: req.params.key , $options: 'ig'} },
-          // { author: { $regex: req.params.key ,$options: 'ig'} },
-        ],
-      });
-      console.log(data)
-      res.json(data);
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
-    }
-  },
 
   getSongById: async (req, res) => {
     try {
@@ -149,6 +119,21 @@ const FileController = {
     } catch (error) {
       return res.status(500).json({ msg: err.message });
     }
-  }
+  },
+  // songRouter.get('/song/search/:key', auth, FlieController.searchSong);
+  searchSongUser: async (req, res) => {
+    try {
+      let data = await Song.find({ status: 1,
+        $or: [
+          { name: { $regex: req.params.key , $options: 'ig'} },
+          // { author: { $regex: req.params.key ,$options: 'ig'} },
+        ],
+      });
+      console.log(data)
+      res.json(data);
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 }
 module.exports = FileController;
