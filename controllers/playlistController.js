@@ -259,6 +259,11 @@ const PlaylistController = {
       } catch (error) {
         res.status(500).json({ msg: error.message });
       }
+  },
+ getRandomPlaylist: async (req, res) => {
+    const playlists = await Playlist.aggregate([{ $sample: { size: 3 } }]);
+    
+    res.status(200).json(playlists);
   }
 };
 
