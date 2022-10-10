@@ -175,12 +175,15 @@ const PlaylistController = {
     }
   },
 
-  //playlistRouter.get('/playlist/:id', auth, playlistController.getPlaylistById);
+  //playlistRouter.get('/playlist-song/:id', auth, playlistController.getPlaylistById);
   getPlaylistById: async (req, res) => {
     try {
       let playlistId = req.params.id;
       let songs = await Song.find({ playlist: playlistId }).populate("playlist");
-      res.status(200).json(songs);
+      console.log(songs);
+      if(songs) {
+        res.status(200).json(songs); 
+      }
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
