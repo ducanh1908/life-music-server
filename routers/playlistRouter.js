@@ -9,11 +9,11 @@ playlistRouter.get('/playlist/search/:key', auth, playlistController.searchPlayl
 playlistRouter.patch('/playlist/update/:id', auth, playlistController.updatePlaylist);
 playlistRouter.delete('/playlist/:id', auth, playlistController.deletePlaylist);
 playlistRouter.post('/playlist/remove/:id', auth, playlistController.removeSongFromPlaylist);
-playlistRouter.get('/playlist/:id', auth, playlistController.getPlaylistById);
+playlistRouter.get('/playlist/:id', playlistController.getPlaylistById);
 playlistRouter.patch('/playlist/:id', auth, playlistController.updatePlaylistById);
-playlistRouter.get('/playlists', auth, playlistController.getAllPublicPlaylist);
-playlistRouter.get('/playlist-song/:id', auth, playlistController.getSongToPlaylist);
-
+playlistRouter.get('/playlists', playlistController.getAllPublicPlaylist);
+playlistRouter.get('/playlist-song/:id', playlistController.getSongToPlaylist);
+playlistRouter.get('/playlist-random', playlistController.getRandomPlaylist);
 
 
 playlistRouter.get('/playlists', auth, playlistController.getAllPublicPlaylist);

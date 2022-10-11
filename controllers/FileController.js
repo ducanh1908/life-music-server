@@ -58,7 +58,7 @@ const FileController = {
   getAllPublicSong: async (req, res) => {
     try {
       let songs = await Song.find({status : 1});
-     
+
       res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -151,7 +151,7 @@ const FileController = {
     }
   },
   getSongById: async (req, res) => {
-    
+
     try {
       let id = req.params.id;
       let song = await Song.findById({_id: id});
@@ -163,6 +163,18 @@ const FileController = {
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }
+  },
+  // getSongNew : async (req, res) => {
+  //   const date = new Date();
+  //   const  lastMonth = new Date(date.getMonth.date.setDay(date.getDay() -1) );
+  //   console.log(lastMonth)
+  //   const  previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() -2));
+  // }
+  getSongRandom: async (req, res) => {
+    const playlists = await Song.aggregate(
+      [ { $match : { status : 1 } } ,
+      { $sample: { size: 9} }])
+    res.status(200).json(playlists);
   }
 }
 module.exports = FileController;
