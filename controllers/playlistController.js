@@ -261,8 +261,9 @@ const PlaylistController = {
       }
   },
  getRandomPlaylist: async (req, res) => {  
-    const playlists = await Playlist.aggregate([ { $match : { status : 2 } } ],
-      [{ $sample: { size: 1} }]);  
+    const playlists = await Playlist.aggregate(
+      [ { $match : { status : 2 } } ,
+      { $sample: { size: 3} }]) 
     res.status(200).json(playlists);
   }
 };

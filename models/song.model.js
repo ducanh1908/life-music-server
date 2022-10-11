@@ -11,7 +11,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-
 const SongSchema = new mongoose.Schema(
     {
         name: {
@@ -72,5 +71,4 @@ const SongSchema = new mongoose.Schema(
     },  
     { timestamps : true}
 )
-
 module.exports = mongoose.model("Song", SongSchema);
