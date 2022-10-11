@@ -10,4 +10,8 @@ songRouter.delete('/song/:id', auth, FileController.deleteSong);
 songRouter.get('/song/search/:key', auth, FileController.searchSong);
 songRouter.get('/song/uploaded', auth, FileController.getUploadedSongs);
 songRouter.get('/song/:id', auth, FileController.getSongById);
+// songRouter.get('/song-new', FileController.getSongNew);
+songRouter.get('/song-random', auth, FileController.getSongRandom);
+
+
 module.exports = songRouter
