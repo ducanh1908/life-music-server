@@ -23,7 +23,7 @@ const FileController = {
       // console.log('newView', newView);
       let createViewSuccess = await newView.save();
       if (success && createViewSuccess) {
-        res.status(200).json({
+        res.status(200).json({success,
           msg: "Đã tải bài hát thành công",
         });
       } else {
