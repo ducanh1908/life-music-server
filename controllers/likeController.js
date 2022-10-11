@@ -35,7 +35,6 @@ const LikeController = {
                         res.status(200).json({msg: 'unlike thành công', likeNumber, like});
                     } else if (index === -1) {
                         res.status(200).json({msg: 'đã unlike rồi'});
-
                     }
             }
         } catch (err) {

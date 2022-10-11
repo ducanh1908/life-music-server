@@ -59,7 +59,7 @@ const SongSchema = new mongoose.Schema(
         },
         status: {
             type: Number,
-            default : 1,
+            default : 2,
         },
         guestViews: {
             type: Number,
