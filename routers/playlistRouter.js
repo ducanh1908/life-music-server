@@ -5,7 +5,7 @@ const playlistController = require("../controllers/playlistController");
 playlistRouter.post('/playlist/:id', auth, playlistController.createNewPlaylist);
 playlistRouter.post('/playlist/addsong/:id', auth, playlistController.addSongIntoPlaylist);
 playlistRouter.get('/playlists/:id', auth, playlistController.getAllUserPlaylist);
-playlistRouter.get('/playlist/search/:key', auth, playlistController.searchPlaylist);
+playlistRouter.get('/playlist/search/:key', playlistController.searchPlaylist);
 playlistRouter.patch('/playlist/update/:id', auth, playlistController.updatePlaylist);
 playlistRouter.delete('/playlist/:id', auth, playlistController.deletePlaylist);
 playlistRouter.post('/playlist/remove/:id', auth, playlistController.removeSongFromPlaylist);

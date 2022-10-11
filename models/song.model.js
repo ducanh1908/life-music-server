@@ -7,7 +7,6 @@
 // - Người đăng
 // - Dòng nhạc
 // - Album
-
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const SongSchema = new mongoose.Schema(

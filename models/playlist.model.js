@@ -23,7 +23,7 @@ const PlaylistSchema = new mongoose.Schema(
         },
         status: {
             type: Number,
-            default: 1
+            default: 2
         },
         description: {
             type: String,

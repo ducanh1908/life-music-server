@@ -15,7 +15,6 @@ const FileController = {
       });
       let success = await newSong.save();
       let {name, image} = success;
-      // console.log('success',success)
       // let songInfo = await Song.findOne().sort({ createdAt: -1 });
       let newView = new View({
         user: req.user._id,
@@ -58,7 +57,6 @@ const FileController = {
   getAllPublicSong: async (req, res) => {
     try {
       let songs = await Song.find({status : 1});
-
       res.json({ songs });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -130,9 +128,9 @@ const FileController = {
   // songRouter.get('/song/search/:key', auth, FileController.searchSong);
   searchSong: async (req, res) => {
     try {
-      let data = await Song.find({
+      let data = await Song.find({ status: 1,
         $or: [
-          { name: { $regex: req.params.key , $options: 'ig'} },
+          { name: { $regex: req.params.key, $options: 'ig' } },
         ],
       });
       res.json(data);
@@ -162,6 +160,15 @@ const FileController = {
       }
     } catch (error) {
       return res.status(500).json({ msg: error.message });
+    }
+  },
+  getSongUser: async (req, res) => {
+    try {
+      let userId = req.params.id;
+      let songs = await Song.find({ user: userId });
+      res.json({songs});
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
     }
   },
   // getSongNew : async (req, res) => {
