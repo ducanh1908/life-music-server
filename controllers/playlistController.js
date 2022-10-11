@@ -189,19 +189,12 @@ const PlaylistController = {
   //playlistRouter.get('/playlist/search/:key', auth, playlistController.searchPlaylist);
   searchPlaylist: async (req, res) => {
     try {
-      let playlists = await Playlist.find({
+      let playlists = await Playlist.find({ status: 2,
         $or: [
-          { name: { $regex: req.params.key } },
+          { name: { $regex: req.params.key , $options: 'ig' } },
         ],
       });
-      // let data = [];
-      // for (let i = 0; i < playlists.length; i++) {
-      //   data.push(await Song.find({ playlist: playlists[i]._id }));
-      // }
-      // for (let i = 0; i < playlists.length; i++) {
-      //   playlists[i]._doc.songs = data[i];
-      // }
-      // res.json({ playlists });
+      res.json({ playlists });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
