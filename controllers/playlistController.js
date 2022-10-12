@@ -187,27 +187,34 @@ const PlaylistController = {
   // },
 
   //playlistRouter.get('/playlist/search/:key', auth, playlistController.searchPlaylist);
-  searchPlaylist: async (req, res) => {
+  searchPlaylist: async (req, res,next) => {
     try {
+
       let playlists = await Playlist.find({ status: 2,
         $or: [
           { name: { $regex: req.params.key , $options: 'ig' } },
         ],
       });
-      res.json({ playlists });
+
+      return res.json({ playlists });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
   },
     getPlaylistById : async(req, res)=> {
+      try{
         let id = req.params.id;
         let playlist = await Playlist.findById({_id:id});
         if(playlist) {
           return   res.status(200).json(playlist);
         }
         else {
-            return res.status(400).json({msg: "Playlist không tồn tại"});
+          return res.status(400).json({msg: "Playlist không tồn tại"});
         }
+      }catch (err){
+        console.log(err)
+      }
+
     },
 
   //playlistRouter.delete('/playlist/:id', auth, playlistController.deletePlaylist);

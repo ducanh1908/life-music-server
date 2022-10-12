@@ -11,7 +11,6 @@ const PlaylistSchema = new mongoose.Schema(
         user: {
             type: Schema.Types.ObjectId,
             ref: "User",
-            required: true,
         },
         cate: {
             type: Schema.Types.ObjectId,
@@ -30,8 +29,7 @@ const PlaylistSchema = new mongoose.Schema(
             default: 'Quyen dep trai'
         }
 
-    },
-    { timestamps : true}
+    }, { timestamps : true}
 )
 
 module.exports = mongoose.model("Playlist", PlaylistSchema);
