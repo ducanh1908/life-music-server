@@ -26,7 +26,7 @@ const PlaylistSchema = new mongoose.Schema(
         },
         description: {
             type: String,
-            default: 'Quyen dep trai'
+            default: 'NHÓM WEB NGHE NHẠC MÃI ĐỈNH'
         }
 
     }, { timestamps : true}
